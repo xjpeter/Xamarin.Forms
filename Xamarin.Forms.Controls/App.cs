@@ -25,8 +25,7 @@ namespace Xamarin.Forms.Controls
 			_testCloudService = DependencyService.Get<ITestCloudService>();
 			InitInsights();
 			//MainPage = new MainPageLifeCycleTests();
-			MainPage = new MasterDetailPage
-			{
+			MainPage = new MasterDetailPage {
 				Master = new ContentPage { Title = "Master", BackgroundColor = Color.Red },
 				Detail = CoreGallery.GetMainPage()
 			};
