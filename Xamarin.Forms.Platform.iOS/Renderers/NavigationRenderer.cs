@@ -217,11 +217,13 @@ namespace Xamarin.Forms.Platform.iOS
 					"NavigationPage must have a root Page before being used. Either call PushAsync with a valid Page, or pass a Page to the constructor before usage.");
 			}
 
-			navPage.PushRequested += OnPushRequested;
-			navPage.PopRequested += OnPopRequested;
-			navPage.PopToRootRequested += OnPopToRootRequested;
-			navPage.RemovePageRequested += OnRemovedPageRequested;
-			navPage.InsertPageBeforeRequested += OnInsertPageBeforeRequested;
+			var navController = ((INavigationPageController)navPage);
+
+			navController.PushRequested += OnPushRequested;
+			navController.PopRequested += OnPopRequested;
+			navController.PopToRootRequested += OnPopToRootRequested;
+			navController.RemovePageRequested += OnRemovedPageRequested;
+			navController.InsertPageBeforeRequested += OnInsertPageBeforeRequested;
 
 			UpdateTint();
 			UpdateBarBackgroundColor();
@@ -260,11 +262,13 @@ namespace Xamarin.Forms.Platform.iOS
 
 				var navPage = (NavigationPage)Element;
 				navPage.PropertyChanged -= HandlePropertyChanged;
-				navPage.PushRequested -= OnPushRequested;
-				navPage.PopRequested -= OnPopRequested;
-				navPage.PopToRootRequested -= OnPopToRootRequested;
-				navPage.RemovePageRequested -= OnRemovedPageRequested;
-				navPage.InsertPageBeforeRequested -= OnInsertPageBeforeRequested;
+
+				var navController = ((INavigationPageController)navPage);
+				navController.PushRequested -= OnPushRequested;
+				navController.PopRequested -= OnPopRequested;
+				navController.PopToRootRequested -= OnPopToRootRequested;
+				navController.RemovePageRequested -= OnRemovedPageRequested;
+				navController.InsertPageBeforeRequested -= OnInsertPageBeforeRequested;
 			}
 
 			base.Dispose(disposing);

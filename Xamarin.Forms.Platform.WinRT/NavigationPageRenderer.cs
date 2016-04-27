@@ -154,8 +154,8 @@ namespace Xamarin.Forms.Platform.WinRT
 
 			if (oldElement != null)
 			{
-				oldElement.PushRequested -= OnPushRequested;
-				oldElement.PopRequested -= OnPopRequested;
+				((INavigationPageController)oldElement).PushRequested -= OnPushRequested;
+				((INavigationPageController)oldElement).PopRequested -= OnPopRequested;
 				oldElement.InternalChildren.CollectionChanged -= OnChildrenChanged;
 				oldElement.PropertyChanged -= OnElementPropertyChanged;
 			}
@@ -184,8 +184,8 @@ namespace Xamarin.Forms.Platform.WinRT
 				UpdateTitleColor();
 				UpdateNavigationBarBackground();
 				Element.PropertyChanged += OnElementPropertyChanged;
-				Element.PushRequested += OnPushRequested;
-				Element.PopRequested += OnPopRequested;
+				((INavigationPageController)Element).PushRequested += OnPushRequested;
+				((INavigationPageController)Element).PopRequested += OnPopRequested;
 				Element.InternalChildren.CollectionChanged += OnChildrenChanged;
 
 				if (!string.IsNullOrEmpty(Element.AutomationId))

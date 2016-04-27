@@ -137,11 +137,14 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 						IVisualElementRenderer renderer = Android.Platform.GetRenderer(child);
 						renderer?.Dispose();
 					}
-					Element.PushRequested -= OnPushed;
-					Element.PopRequested -= OnPopped;
-					Element.PopToRootRequested -= OnPoppedToRoot;
-					Element.InsertPageBeforeRequested -= OnInsertPageBeforeRequested;
-					Element.RemovePageRequested -= OnRemovePageRequested;
+
+					var navController = (INavigationPageController)Element;
+
+					navController.PushRequested -= OnPushed;
+					navController.PopRequested -= OnPopped;
+					navController.PopToRootRequested -= OnPoppedToRoot;
+					navController.InsertPageBeforeRequested -= OnInsertPageBeforeRequested;
+					navController.RemovePageRequested -= OnRemovePageRequested;
 					Element.SendDisappearing();
 				}
 
@@ -188,11 +191,13 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 			if (e.OldElement != null)
 			{
-				e.OldElement.PushRequested -= OnPushed;
-				e.OldElement.PopRequested -= OnPopped;
-				e.OldElement.PopToRootRequested -= OnPoppedToRoot;
-				e.OldElement.InsertPageBeforeRequested -= OnInsertPageBeforeRequested;
-				e.OldElement.RemovePageRequested -= OnRemovePageRequested;
+				var oldNavController = (INavigationPageController)e.OldElement;
+
+				oldNavController.PushRequested -= OnPushed;
+				oldNavController.PopRequested -= OnPopped;
+				oldNavController.PopToRootRequested -= OnPoppedToRoot;
+				oldNavController.InsertPageBeforeRequested -= OnInsertPageBeforeRequested;
+				oldNavController.RemovePageRequested -= OnRemovePageRequested;
 
 				RemoveAllViews();
 				if (_toolbar != null)
@@ -220,11 +225,13 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				_toolbarTracker.AdditionalTargets = parents;
 				UpdateMenu();
 
-				e.NewElement.PushRequested += OnPushed;
-				e.NewElement.PopRequested += OnPopped;
-				e.NewElement.PopToRootRequested += OnPoppedToRoot;
-				e.NewElement.InsertPageBeforeRequested += OnInsertPageBeforeRequested;
-				e.NewElement.RemovePageRequested += OnRemovePageRequested;
+				var navController = (INavigationPageController)e.NewElement;
+
+				navController.PushRequested += OnPushed;
+				navController.PopRequested += OnPopped;
+				navController.PopToRootRequested += OnPoppedToRoot;
+				navController.InsertPageBeforeRequested += OnInsertPageBeforeRequested;
+				navController.RemovePageRequested += OnRemovePageRequested;
 
 				// If there is already stuff on the stack we need to push it
 				((INavigationPageController)e.NewElement).StackCopy.Reverse().ForEach(p => PushViewAsync(p, false));

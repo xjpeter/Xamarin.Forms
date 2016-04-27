@@ -26,11 +26,13 @@ namespace Xamarin.Forms.Platform.WinPhone
 
 			Action init = () =>
 			{
-				Element.PushRequested += PageOnPushed;
-				Element.PopRequested += PageOnPopped;
-				Element.PopToRootRequested += PageOnPoppedToRoot;
-				Element.RemovePageRequested += RemovePageRequested;
-				Element.InsertPageBeforeRequested += ElementOnInsertPageBeforeRequested;
+				var navController = (INavigationPageController)Element;
+
+				navController.PushRequested += PageOnPushed;
+				navController.PopRequested += PageOnPopped;
+				navController.PopToRootRequested += PageOnPoppedToRoot;
+				navController.RemovePageRequested += RemovePageRequested;
+				navController.InsertPageBeforeRequested += ElementOnInsertPageBeforeRequested;
 				Element.PropertyChanged += OnElementPropertyChanged;
 
 				var platform = (Platform)Element.Platform;

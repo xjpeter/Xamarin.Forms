@@ -168,7 +168,7 @@
     <Compile Include="ModalPushingEventArgs.cs" />
     <Compile Include="NavigationEventArgs.cs" />
     <Compile Include="NavigationModel.cs" />
-    <Compile Include="NavigationRequestedEventArgs.cs" />
+    <Compile Include="Internals\NavigationRequestedEventArgs.cs" />
     <Compile Include="NotifyCollectionChangedEventArgsEx.cs" />
     <Compile Include="NotifyCollectionChangedEventArgsExtensions.cs" />
     <Compile Include="NullEffect.cs" />

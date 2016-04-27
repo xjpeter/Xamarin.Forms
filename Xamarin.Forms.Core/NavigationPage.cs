@@ -215,7 +215,13 @@ namespace Xamarin.Forms
 			return base.OnBackButtonPressed();
 		}
 
-		internal event EventHandler<NavigationRequestedEventArgs> InsertPageBeforeRequested;
+		event EventHandler<NavigationRequestedEventArgs> InsertPageBeforeRequestedInternal;
+
+		event EventHandler<NavigationRequestedEventArgs> INavigationPageController.InsertPageBeforeRequested
+		{
+			add { InsertPageBeforeRequestedInternal += value; }
+			remove { InsertPageBeforeRequestedInternal -= value; }
+		}
 
 		async Task<Page> INavigationPageController.PopAsyncInner(bool animated, bool fast)
 		{
@@ -230,7 +236,7 @@ namespace Xamarin.Forms
 
 			var removed = true;
 
-			EventHandler<NavigationRequestedEventArgs> requestPop = PopRequested;
+			EventHandler<NavigationRequestedEventArgs> requestPop = PopRequestedInternal;
 			if (requestPop != null)
 			{
 				requestPop(this, args);
@@ -252,13 +258,37 @@ namespace Xamarin.Forms
 			return page;
 		}
 
-		internal event EventHandler<NavigationRequestedEventArgs> PopRequested;
+		event EventHandler<NavigationRequestedEventArgs> PopRequestedInternal;
 
-		internal event EventHandler<NavigationRequestedEventArgs> PopToRootRequested;
+		event EventHandler<NavigationRequestedEventArgs> INavigationPageController.PopRequested
+		{
+			add { PopRequestedInternal += value; }
+			remove { PopRequestedInternal -= value; }
+		}
 
-		internal event EventHandler<NavigationRequestedEventArgs> PushRequested;
+		event EventHandler<NavigationRequestedEventArgs> PopToRootRequestedInternal;
 
-		internal event EventHandler<NavigationRequestedEventArgs> RemovePageRequested;
+		event EventHandler<NavigationRequestedEventArgs> INavigationPageController.PopToRootRequested
+		{
+			add { PopToRootRequestedInternal += value; }
+			remove { PopToRootRequestedInternal -= value; }
+		}
+
+		event EventHandler<NavigationRequestedEventArgs> PushRequestedInternal;
+
+		event EventHandler<NavigationRequestedEventArgs> INavigationPageController.PushRequested
+		{
+			add { PushRequestedInternal += value; }
+			remove { PushRequestedInternal -= value; }
+		}
+
+		event EventHandler<NavigationRequestedEventArgs> RemovePageRequestedInternal;
+
+		event EventHandler<NavigationRequestedEventArgs> INavigationPageController.RemovePageRequested
+		{
+			add { RemovePageRequestedInternal += value; }
+			remove { RemovePageRequestedInternal -= value; }
+		}
 
 		void InsertPageBefore(Page page, Page before)
 		{
@@ -268,7 +298,7 @@ namespace Xamarin.Forms
 			if (InternalChildren.Contains(page))
 				throw new ArgumentException("Cannot insert page which is already in the navigation stack");
 
-			EventHandler<NavigationRequestedEventArgs> handler = InsertPageBeforeRequested;
+			EventHandler<NavigationRequestedEventArgs> handler = InsertPageBeforeRequestedInternal;
 			if (handler != null)
 				handler(this, new NavigationRequestedEventArgs(page, before, false));
 
@@ -293,7 +323,7 @@ namespace Xamarin.Forms
 
 			var args = new NavigationRequestedEventArgs(root, animated);
 
-			EventHandler<NavigationRequestedEventArgs> requestPopToRoot = PopToRootRequested;
+			EventHandler<NavigationRequestedEventArgs> requestPopToRoot = PopToRootRequestedInternal;
 			if (requestPopToRoot != null)
 			{
 				requestPopToRoot(this, args);
@@ -315,7 +345,7 @@ namespace Xamarin.Forms
 
 			var args = new NavigationRequestedEventArgs(page, animated);
 
-			EventHandler<NavigationRequestedEventArgs> requestPush = PushRequested;
+			EventHandler<NavigationRequestedEventArgs> requestPush = PushRequestedInternal;
 			if (requestPush != null)
 			{
 				requestPush(this, args);
@@ -349,7 +379,7 @@ namespace Xamarin.Forms
 			if (!InternalChildren.Contains(page))
 				throw new ArgumentException("Page to remove must be contained on this Navigation Page");
 
-			EventHandler<NavigationRequestedEventArgs> handler = RemovePageRequested;
+			EventHandler<NavigationRequestedEventArgs> handler = RemovePageRequestedInternal;
 			if (handler != null)
 				handler(this, new NavigationRequestedEventArgs(page, true));
 
