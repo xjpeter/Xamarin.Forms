@@ -13,5 +13,7 @@ namespace Xamarin.Forms
 		bool ShouldShowSplitMode { get; }
 
 		void UpdateMasterBehavior();
+
+		event EventHandler<BackButtonPressedEventArgs> BackButtonPressed;
 	}
 }

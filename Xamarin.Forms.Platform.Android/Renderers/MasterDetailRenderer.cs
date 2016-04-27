@@ -99,10 +99,10 @@ namespace Xamarin.Forms.Platform.Android
 			OnElementChanged(oldElement, element);
 
 			if (oldElement != null)
-				oldElement.BackButtonPressed -= OnBackButtonPressed;
+				((IMasterDetailPageController)oldElement).BackButtonPressed -= OnBackButtonPressed;
 
 			if (_page != null)
-				_page.BackButtonPressed += OnBackButtonPressed;
+				((IMasterDetailPageController)_page).BackButtonPressed += OnBackButtonPressed;
 
 			if (Tracker == null)
 				Tracker = new VisualElementTracker(this);
@@ -167,7 +167,7 @@ namespace Xamarin.Forms.Platform.Android
 
 				if (_page != null)
 				{
-					_page.BackButtonPressed -= OnBackButtonPressed;
+					((IMasterDetailPageController)_page).BackButtonPressed -= OnBackButtonPressed;
 					_page.PropertyChanged -= HandlePropertyChanged;
 					_page.Appearing -= MasterDetailPageAppearing;
 					_page.Disappearing -= MasterDetailPageDisappearing;

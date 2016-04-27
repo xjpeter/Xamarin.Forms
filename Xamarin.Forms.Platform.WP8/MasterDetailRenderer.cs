@@ -33,10 +33,10 @@ namespace Xamarin.Forms.Platform.WinPhone
 			base.OnElementChanged(e);
 
 			if (e.OldElement != null)
-				e.OldElement.BackButtonPressed -= HandleBackButtonPressed;
+				((IMasterDetailPageController)e.OldElement).BackButtonPressed -= HandleBackButtonPressed;
 
 			if (e.NewElement != null)
-				e.NewElement.BackButtonPressed += HandleBackButtonPressed;
+				((IMasterDetailPageController)e.NewElement).BackButtonPressed += HandleBackButtonPressed;
 
 			LoadDetail();
 			LoadMaster();

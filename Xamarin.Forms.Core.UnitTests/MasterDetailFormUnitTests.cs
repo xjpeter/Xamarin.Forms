@@ -338,7 +338,7 @@ namespace Xamarin.Forms.Core.UnitTests
 				Platform = new UnitPlatform ()
 			};
 
-			mdp.BackButtonPressed += (sender, args) => {
+			((IMasterDetailPageController)mdp).BackButtonPressed += (sender, args) => {
 				args.Handled = mdp.IsPresented;
 				mdp.IsPresented = false;
 			};
@@ -369,7 +369,7 @@ namespace Xamarin.Forms.Core.UnitTests
 				Platform = new UnitPlatform ()
 			};
 
-			mdp.BackButtonPressed += (sender, args) => {
+			((IMasterDetailPageController)mdp).BackButtonPressed += (sender, args) => {
 				args.Handled = mdp.IsPresented;
 				mdp.IsPresented = false;
 			};

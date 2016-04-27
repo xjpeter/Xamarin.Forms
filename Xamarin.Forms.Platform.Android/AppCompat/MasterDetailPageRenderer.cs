@@ -87,7 +87,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 			if (oldElement != null)
 			{
-				oldElement.BackButtonPressed -= OnBackButtonPressed;
+				((IMasterDetailPageController)oldElement).BackButtonPressed -= OnBackButtonPressed;
 				oldElement.PropertyChanged -= HandlePropertyChanged;
 				oldElement.Appearing -= MasterDetailPageAppearing;
 				oldElement.Disappearing -= MasterDetailPageDisappearing;
@@ -126,7 +126,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				UpdateMaster();
 				UpdateDetail();
 
-				newElement.BackButtonPressed += OnBackButtonPressed;
+				((IMasterDetailPageController)newElement).BackButtonPressed += OnBackButtonPressed;
 				newElement.PropertyChanged += HandlePropertyChanged;
 				newElement.Appearing += MasterDetailPageAppearing;
 				newElement.Disappearing += MasterDetailPageDisappearing;
@@ -182,7 +182,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 				if (Element != null)
 				{
-					Element.BackButtonPressed -= OnBackButtonPressed;
+					((IMasterDetailPageController)Element).BackButtonPressed -= OnBackButtonPressed;
 					Element.PropertyChanged -= HandlePropertyChanged;
 					Element.Appearing -= MasterDetailPageAppearing;
 					Element.Disappearing -= MasterDetailPageDisappearing;

@@ -169,7 +169,7 @@ namespace Xamarin.Forms
 					return true;
 			}
 
-			EventHandler<BackButtonPressedEventArgs> handler = BackButtonPressed;
+			EventHandler<BackButtonPressedEventArgs> handler = BackButtonPressedInternal;
 			if (handler != null)
 			{
 				var args = new BackButtonPressedEventArgs();
@@ -193,7 +193,12 @@ namespace Xamarin.Forms
 			base.OnParentSet();
 		}
 
-		internal event EventHandler<BackButtonPressedEventArgs> BackButtonPressed;
+		event EventHandler<BackButtonPressedEventArgs> BackButtonPressedInternal;
+		event EventHandler<BackButtonPressedEventArgs> IMasterDetailPageController.BackButtonPressed
+		{
+			add { BackButtonPressedInternal += value; }
+			remove { BackButtonPressedInternal -= value; }
+		}
 
 		void IMasterDetailPageController.UpdateMasterBehavior()
 		{
