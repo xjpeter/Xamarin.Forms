@@ -228,7 +228,7 @@ namespace Xamarin.Forms.Platform.iOS
 			UpdateBarTextColor();
 
 			// If there is already stuff on the stack we need to push it
-			navPage.StackCopy.Reverse().ForEach(async p => await PushPageAsync(p, false));
+			((INavigationPageController)navPage).StackCopy.Reverse().ForEach(async p => await PushPageAsync(p, false));
 
 			_tracker = new VisualElementTracker(this);
 
@@ -542,7 +542,7 @@ namespace Xamarin.Forms.Platform.iOS
 				for (var i = 0; i < removed; i++)
 				{
 					// lets just pop these suckers off, do not await, the true is there to make this fast
-					await ((NavigationPage)Element).PopAsyncInner(animated, true);
+					await ((INavigationPageController)Element).PopAsyncInner(animated, true);
 				}
 				// because we skip the normal pop process we need to dispose ourselves
 				controller.Dispose();
@@ -625,7 +625,7 @@ namespace Xamarin.Forms.Platform.iOS
 		void UpdateLeftBarButtonItem(ParentingViewController containerController)
 		{
 			var currentChild = containerController.Child;
-			var firstPage = ((NavigationPage)Element).StackCopy.LastOrDefault();
+			var firstPage = ((INavigationPageController)Element).StackCopy.LastOrDefault();
 			if ((currentChild != firstPage && NavigationPage.GetHasBackButton(currentChild)) || _parentMasterDetailPage == null)
 				return;
 

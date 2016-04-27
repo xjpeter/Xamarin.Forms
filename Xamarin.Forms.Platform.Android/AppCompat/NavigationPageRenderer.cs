@@ -227,7 +227,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				e.NewElement.RemovePageRequested += OnRemovePageRequested;
 
 				// If there is already stuff on the stack we need to push it
-				e.NewElement.StackCopy.Reverse().ForEach(p => PushViewAsync(p, false));
+				((INavigationPageController)e.NewElement).StackCopy.Reverse().ForEach(p => PushViewAsync(p, false));
 			}
 		}
 
@@ -415,7 +415,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 		Task<bool> OnPopViewAsync(Page page, bool animated)
 		{
-			Page pageToShow = Element.StackCopy.Skip(1).FirstOrDefault();
+			Page pageToShow = ((INavigationPageController)Element).StackCopy.Skip(1).FirstOrDefault();
 			if (pageToShow == null)
 				return Task.FromResult(false);
 
@@ -593,10 +593,10 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				if (!removed)
 				{
 					UpdateToolbar();
-					if (_drawerToggle != null && Element.StackDepth == 2)
+					if (_drawerToggle != null && ((INavigationPageController)Element).StackDepth == 2)
 						AnimateArrowIn();
 				}
-				else if (_drawerToggle != null && Element.StackDepth == 2)
+				else if (_drawerToggle != null && ((INavigationPageController)Element).StackDepth == 2)
 					AnimateArrowOut();
 
 				Device.StartTimer(TimeSpan.FromMilliseconds(200), () =>
@@ -680,7 +680,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			if (bar == null)
 				return;
 
-			bool isNavigated = Element.StackDepth > 1;
+			bool isNavigated = ((INavigationPageController)Element).StackDepth > 1;
 			bar.NavigationIcon = null;
 
 			if (isNavigated)

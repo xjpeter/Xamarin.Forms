@@ -7,7 +7,7 @@ using Xamarin.Forms.Platform;
 namespace Xamarin.Forms
 {
 	[RenderWith(typeof(_NavigationPageRenderer))]
-	public class NavigationPage : Page, IPageContainer<Page>
+	public class NavigationPage : Page, IPageContainer<Page>, INavigationPageController
 	{
 		public static readonly BindableProperty BackButtonTitleProperty = BindableProperty.CreateAttached("BackButtonTitle", typeof(string), typeof(Page), null);
 
@@ -58,7 +58,7 @@ namespace Xamarin.Forms
 
 		internal Task CurrentNavigationTask { get; set; }
 
-		internal Stack<Page> StackCopy
+		Stack<Page> INavigationPageController.StackCopy
 		{
 			get
 			{
@@ -69,7 +69,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal int StackDepth
+		int INavigationPageController.StackDepth
 		{
 			get { return InternalChildren.Count; }
 		}
@@ -116,12 +116,12 @@ namespace Xamarin.Forms
 				CurrentNavigationTask = tcs.Task;
 				await oldTask;
 
-				Page page = await PopAsyncInner(animated);
+				Page page = await ((INavigationPageController)this).PopAsyncInner(animated);
 				tcs.SetResult(true);
 				return page;
 			}
 
-			Task<Page> result = PopAsyncInner(animated);
+			Task<Page> result = ((INavigationPageController)this).PopAsyncInner(animated);
 			CurrentNavigationTask = result;
 			return await result;
 		}
@@ -206,7 +206,7 @@ namespace Xamarin.Forms
 			if (CurrentPage.SendBackButtonPressed())
 				return true;
 
-			if (StackDepth > 1)
+			if (((INavigationPageController)this).StackDepth > 1)
 			{
 				SafePop();
 				return true;
@@ -217,9 +217,9 @@ namespace Xamarin.Forms
 
 		internal event EventHandler<NavigationRequestedEventArgs> InsertPageBeforeRequested;
 
-		internal async Task<Page> PopAsyncInner(bool animated, bool fast = false)
+		async Task<Page> INavigationPageController.PopAsyncInner(bool animated, bool fast)
 		{
-			if (StackDepth == 1)
+			if (((INavigationPageController)this).StackDepth == 1)
 			{
 				return null;
 			}
@@ -282,7 +282,7 @@ namespace Xamarin.Forms
 
 		async Task PopToRootAsyncInner(bool animated)
 		{
-			if (StackDepth == 1)
+			if (((INavigationPageController)this).StackDepth == 1)
 				return;
 
 			var root = (Page)InternalChildren.First();
@@ -337,7 +337,7 @@ namespace Xamarin.Forms
 
 		void RemovePage(Page page)
 		{
-			if (page == CurrentPage && StackDepth <= 1)
+			if (page == CurrentPage && ((INavigationPageController)this).StackDepth <= 1)
 				throw new InvalidOperationException("Cannot remove root page when it is also the currently displayed page.");
 			if (page == CurrentPage)
 			{

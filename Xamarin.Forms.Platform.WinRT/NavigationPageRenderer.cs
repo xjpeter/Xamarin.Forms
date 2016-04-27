@@ -391,8 +391,8 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void PushExistingNavigationStack()
 		{
-			for (int i = Element.StackCopy.Count - 1; i >= 0; i--)
-				SetPage(Element.StackCopy.ElementAt(i), false, false);
+			for (int i = ((INavigationPageController)Element).StackCopy.Count - 1; i >= 0; i--)
+				SetPage(((INavigationPageController)Element).StackCopy.ElementAt(i), false, false);
 		}
 
 		void SetPage(Page page, bool isAnimated, bool isPopping)
