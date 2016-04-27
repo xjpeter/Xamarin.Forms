@@ -60,7 +60,7 @@ namespace Xamarin.Forms.ControlGallery.Android
 
 		protected override void Dispose(bool disposing)
 		{
-			if(disposing && _page != null)
+			if (disposing && _page != null)
 			{
 				_page.LayoutChanged -= Page_LayoutChanged;
 				_page.PropertyChanged -= Page_PropertyChanged;
