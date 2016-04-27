@@ -40,7 +40,7 @@ namespace Xamarin.Forms.Core.UnitTests
 			bool thrown = false;
 			searchBar.SearchButtonPressed += (sender, e) => thrown = true;
 
-			((ISearchBar)searchBar).OnSearchButtonPressed ();
+			((ISearchBarController)searchBar).OnSearchButtonPressed ();
 
 			Assert.True (thrown);
 		}
@@ -55,7 +55,7 @@ namespace Xamarin.Forms.Core.UnitTests
 			searchBar.SearchCommand = new Command (p => { result = p; });
 			searchBar.SearchCommandParameter = param;
 
-			((ISearchBar)searchBar).OnSearchButtonPressed ();
+			((ISearchBarController)searchBar).OnSearchButtonPressed ();
 
 			Assert.AreEqual (param, result);
 		}

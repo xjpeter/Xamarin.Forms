@@ -1,6 +1,6 @@
 namespace Xamarin.Forms
 {
-	public interface ISearchBar
+	public interface ISearchBarController
 	{
 		void OnSearchButtonPressed();
 	}

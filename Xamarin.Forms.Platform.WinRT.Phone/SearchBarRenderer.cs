@@ -59,7 +59,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void OnQuerySubmitted (SearchBox sender, SearchBoxQuerySubmittedEventArgs e)
 		{
-			((ISearchBar)Element).OnSearchButtonPressed ();
+			((ISearchBarController)Element).OnSearchButtonPressed ();
 		}
 
 		void UpdatePlaceholder ()
