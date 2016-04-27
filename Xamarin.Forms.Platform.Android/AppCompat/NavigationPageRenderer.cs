@@ -15,6 +15,7 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.Graphics.Drawable;
 using Android.Util;
 using Android.Views;
+using Xamarin.Forms.Internals;
 using ActionBarDrawerToggle = Android.Support.V7.App.ActionBarDrawerToggle;
 using AView = Android.Views.View;
 using AToolbar = Android.Support.V7.Widget.Toolbar;

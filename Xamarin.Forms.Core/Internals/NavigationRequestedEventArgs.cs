@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Xamarin.Forms
+namespace Xamarin.Forms.Internals
 {
 	public class NavigationRequestedEventArgs : NavigationEventArgs
 	{
