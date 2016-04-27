@@ -33,7 +33,11 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				if (_isMaster)
 				{
 					var width = (int)Context.ToPixels(_parent.MasterBounds.Width);
-					// Adding Top accounts for the top padding the base class is already giving us in GetBounds
+                    // When the base class computes the size of the Master container, it starts at the top of the 
+                    // screen and adds padding (_parent.MasterBounds.Top) to leave room for the status bar
+                    // When this container is laid out, it's already starting from the adjusted y value of the parent,
+                    // so we subtract _parent.MasterBounds.Top from our starting point (to get 0) and add it to the 
+                    // bottom (so the master page stretches to the bottom of the screen)
 					var height = (int)Context.ToPixels(_parent.MasterBounds.Height + _parent.MasterBounds.Top); 
 					_pageContainer.Layout(0, 0, width, height);
 				}
