@@ -4,7 +4,7 @@ using Xamarin.Forms.Platform;
 namespace Xamarin.Forms
 {
 	[RenderWith(typeof(_MasterDetailPageRenderer))]
-	public class MasterDetailPage : Page
+	public class MasterDetailPage : Page, IMasterDetailPageController
 	{
 		public static readonly BindableProperty IsGestureEnabledProperty = BindableProperty.Create("IsGestureEnabled", typeof(bool), typeof(MasterDetailPage), true);
 
@@ -89,9 +89,9 @@ namespace Xamarin.Forms
 			set { SetValue(MasterBehaviorProperty, value); }
 		}
 
-		internal bool CanChangeIsPresented { get; set; } = true;
+		bool IMasterDetailPageController.CanChangeIsPresented { get; set; } = true;
 
-		internal Rectangle DetailBounds
+		Rectangle IMasterDetailPageController.DetailBounds
 		{
 			get { return _detailBounds; }
 			set
@@ -103,7 +103,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal Rectangle MasterBounds
+		Rectangle IMasterDetailPageController.MasterBounds
 		{
 			get { return _masterBounds; }
 			set
@@ -115,7 +115,7 @@ namespace Xamarin.Forms
 			}
 		}
 
-		internal bool ShouldShowSplitMode
+		bool IMasterDetailPageController.ShouldShowSplitMode
 		{
 			get
 			{
@@ -156,7 +156,7 @@ namespace Xamarin.Forms
 
 		protected override void OnAppearing()
 		{
-			CanChangeIsPresented = true;
+			((IMasterDetailPageController)this).CanChangeIsPresented = true;
 			UpdateMasterBehavior(this);
 			base.OnAppearing();
 		}
@@ -195,13 +195,18 @@ namespace Xamarin.Forms
 
 		internal event EventHandler<BackButtonPressedEventArgs> BackButtonPressed;
 
+		void IMasterDetailPageController.UpdateMasterBehavior()
+		{
+			UpdateMasterBehavior(this);
+		}
+
 		internal static void UpdateMasterBehavior(MasterDetailPage page)
 		{
-			if (page.ShouldShowSplitMode)
+			if (((IMasterDetailPageController)page).ShouldShowSplitMode)
 			{
 				page.SetValueCore(IsPresentedProperty, true);
 				if (page.MasterBehavior != MasterBehavior.Default)
-					page.CanChangeIsPresented = false;
+					((IMasterDetailPageController)page).CanChangeIsPresented = false;
 			}
 		}
 
@@ -216,7 +221,7 @@ namespace Xamarin.Forms
 		static void OnIsPresentedPropertyChanging(BindableObject sender, object oldValue, object newValue)
 		{
 			var page = (MasterDetailPage)sender;
-			if (!page.CanChangeIsPresented)
+			if (!((IMasterDetailPageController)page).CanChangeIsPresented)
 				throw new InvalidOperationException(string.Format("Can't change IsPresented when setting {0}", page.MasterBehavior));
 		}
 

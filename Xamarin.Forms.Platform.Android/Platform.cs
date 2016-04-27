@@ -378,7 +378,7 @@ namespace Xamarin.Forms.Platform.Android
 			}
 			else if (CurrentMasterDetailPage != null)
 			{
-				if (CurrentMasterDetailPage.ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented)
+				if (((IMasterDetailPageController)CurrentMasterDetailPage).ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented)
 					return;
 				CurrentMasterDetailPage.IsPresented = !CurrentMasterDetailPage.IsPresented;
 			}
@@ -480,7 +480,7 @@ namespace Xamarin.Forms.Platform.Android
 				return;
 			}
 			if (!CurrentMasterDetailPage.ShouldShowToolbarButton() || string.IsNullOrEmpty(CurrentMasterDetailPage.Master.Icon) ||
-				(CurrentMasterDetailPage.ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented))
+				(((IMasterDetailPageController)CurrentMasterDetailPage).ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented))
 			{
 				//clear out existing icon;
 				ClearMasterDetailToggle();

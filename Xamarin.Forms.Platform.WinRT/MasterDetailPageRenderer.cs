@@ -166,7 +166,7 @@ namespace Xamarin.Forms.Platform.WinRT
 		bool GetIsMasterAPopover()
 		{
 			// TODO: Support tablet being shrunk to a very small size
-			return !Element.ShouldShowSplitMode;
+			return !((IMasterDetailPageController)Element).ShouldShowSplitMode;
 		}
 
 		void OnLoaded(object sender, RoutedEventArgs args)
@@ -266,8 +266,8 @@ namespace Xamarin.Forms.Platform.WinRT
 			if (!isPopover)
 				detailWidth -= masterWidth;
 
-			Element.MasterBounds = new Rectangle(0, 0, masterWidth, constraint.Height);
-			Element.DetailBounds = new Rectangle(0, 0, detailWidth, constraint.Height);
+			((IMasterDetailPageController)Element).MasterBounds = new Rectangle(0, 0, masterWidth, constraint.Height);
+			((IMasterDetailPageController)Element).DetailBounds = new Rectangle(0, 0, detailWidth, constraint.Height);
 		}
 
 		void UpdateIsPresented()

@@ -234,8 +234,8 @@ namespace Xamarin.Forms.Platform.UWP
 			Windows.Foundation.Size masterSize = Control.MasterSize;
 			Windows.Foundation.Size detailSize = Control.DetailSize;
 
-			Element.MasterBounds = new Rectangle(0, 0, masterSize.Width, masterSize.Height);
-			Element.DetailBounds = new Rectangle(0, 0, detailSize.Width, detailSize.Height);
+			((IMasterDetailPageController)Element).MasterBounds = new Rectangle(0, 0, masterSize.Width, masterSize.Height);
+			((IMasterDetailPageController)Element).DetailBounds = new Rectangle(0, 0, detailSize.Width, detailSize.Height);
 		}
 
 		void UpdateDetail()
@@ -290,7 +290,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		void UpdateMode()
 		{
-			Control.ShouldShowSplitMode = Element.ShouldShowSplitMode;
+			Control.ShouldShowSplitMode = ((IMasterDetailPageController)Element).ShouldShowSplitMode;
 		}
 
 #if WINDOWS_UWP

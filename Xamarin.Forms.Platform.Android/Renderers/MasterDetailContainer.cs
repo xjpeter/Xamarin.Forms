@@ -67,7 +67,7 @@ namespace Xamarin.Forms.Platform.Android
 
 		public override bool OnInterceptTouchEvent(MotionEvent ev)
 		{
-			bool isShowingPopover = _parent.IsPresented && !_parent.ShouldShowSplitMode;
+			bool isShowingPopover = _parent.IsPresented && !((IMasterDetailPageController)_parent).ShouldShowSplitMode;
 			if (!_isMaster && isShowingPopover)
 				return true;
 			return base.OnInterceptTouchEvent(ev);
@@ -90,9 +90,9 @@ namespace Xamarin.Forms.Platform.Android
 
 			Rectangle bounds = GetBounds(_isMaster, l, t, r, b);
 			if (_isMaster)
-				_parent.MasterBounds = bounds;
+				((IMasterDetailPageController)_parent).MasterBounds = bounds;
 			else
-				_parent.DetailBounds = bounds;
+				((IMasterDetailPageController)_parent).DetailBounds = bounds;
 
 			IVisualElementRenderer renderer = Platform.GetRenderer(_childView);
 			renderer.UpdateLayout();
@@ -113,7 +113,7 @@ namespace Xamarin.Forms.Platform.Android
 			double xPos = 0;
 
 			//splitview
-			if (_parent.ShouldShowSplitMode)
+			if (((IMasterDetailPageController)_parent).ShouldShowSplitMode)
 			{
 				//to keep some behavior we have on iPad where you can toggle and it won't do anything 
 				bool isDefaultNoToggle = _parent.MasterBehavior == MasterBehavior.Default;

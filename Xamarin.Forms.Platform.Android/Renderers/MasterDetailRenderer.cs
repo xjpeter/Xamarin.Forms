@@ -33,7 +33,7 @@ namespace Xamarin.Forms.Platform.Android
 					return;
 				UpdateSplitViewLayout();
 				_presented = value;
-				if (_page.MasterBehavior == MasterBehavior.Default && _page.ShouldShowSplitMode)
+				if (_page.MasterBehavior == MasterBehavior.Default && ((IMasterDetailPageController)_page).ShouldShowSplitMode)
 					return;
 				if (_presented)
 					OpenDrawer(_masterLayout);
@@ -202,7 +202,7 @@ namespace Xamarin.Forms.Platform.Android
 		{
 			base.OnLayout(changed, l, t, r, b);
 			//hack to make the split layout handle touches the full width
-			if (_page.ShouldShowSplitMode && _masterLayout != null)
+			if (((IMasterDetailPageController)_page).ShouldShowSplitMode && _masterLayout != null)
 				_masterLayout.Right = r;
 		}
 
@@ -210,9 +210,9 @@ namespace Xamarin.Forms.Platform.Android
 		{
 			if (e.PropertyName == "CurrentOrientation")
 			{
-				if (!_page.ShouldShowSplitMode && Presented)
+				if (!((IMasterDetailPageController)_page).ShouldShowSplitMode && Presented)
 				{
-					_page.CanChangeIsPresented = true;
+					((IMasterDetailPageController)_page).CanChangeIsPresented = true;
 					//hack : when the orientation changes and we try to close the Master on Android		
 					//sometimes Android picks the width of the screen previous to the rotation 		
 					//this leaves a little of the master visible, the hack is to delay for 50ms closing the drawer
@@ -335,7 +335,8 @@ namespace Xamarin.Forms.Platform.Android
 		{
 			if (Device.Idiom == TargetIdiom.Tablet)
 			{
-				bool isShowingSplit = _page.ShouldShowSplitMode || (_page.ShouldShowSplitMode && _page.MasterBehavior != MasterBehavior.Default && _page.IsPresented);
+				bool isShowingSplit = ((IMasterDetailPageController)_page).ShouldShowSplitMode 
+					|| (((IMasterDetailPageController)_page).ShouldShowSplitMode && _page.MasterBehavior != MasterBehavior.Default && _page.IsPresented);
 				SetLockMode(isShowingSplit ? LockModeLockedOpen : LockModeUnlocked);
 				unchecked
 				{

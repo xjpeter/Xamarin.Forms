@@ -39,7 +39,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 					return;
 				UpdateSplitViewLayout();
 				_presented = value;
-				if (Element.MasterBehavior == MasterBehavior.Default && Element.ShouldShowSplitMode)
+				if (Element.MasterBehavior == MasterBehavior.Default && ((IMasterDetailPageController)Element).ShouldShowSplitMode)
 					return;
 				if (_presented)
 					OpenDrawer(_masterLayout);
@@ -215,7 +215,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		{
 			base.OnLayout(changed, l, t, r, b);
 			//hack to make the split layout handle touches the full width
-			if (Element.ShouldShowSplitMode && _masterLayout != null)
+			if (((IMasterDetailPageController)Element).ShouldShowSplitMode && _masterLayout != null)
 				_masterLayout.Right = r;
 		}
 
@@ -223,9 +223,9 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		{
 			if (nameof(Device.Info.CurrentOrientation) == e.PropertyName)
 			{
-				if (!Element.ShouldShowSplitMode && Presented)
+				if (!((IMasterDetailPageController)Element).ShouldShowSplitMode && Presented)
 				{
-					Element.CanChangeIsPresented = true;
+					((IMasterDetailPageController)Element).CanChangeIsPresented = true;
 					//hack : when the orientation changes and we try to close the Master on Android		
 					//sometimes Android picks the width of the screen previous to the rotation 		
 					//this leaves a little of the master visible, the hack is to delay for 50ms closing the drawer
@@ -343,7 +343,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		{
 			if (Device.Idiom == TargetIdiom.Tablet)
 			{
-				bool isShowingSplit = Element.ShouldShowSplitMode || (Element.ShouldShowSplitMode && Element.MasterBehavior != MasterBehavior.Default && Element.IsPresented);
+				bool isShowingSplit = ((IMasterDetailPageController)Element).ShouldShowSplitMode || (((IMasterDetailPageController)Element).ShouldShowSplitMode && Element.MasterBehavior != MasterBehavior.Default && Element.IsPresented);
 				SetLockMode(isShowingSplit ? LockModeLockedOpen : LockModeUnlocked);
 				unchecked
 				{

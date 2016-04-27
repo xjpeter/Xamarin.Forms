@@ -170,8 +170,8 @@ namespace Xamarin.Forms.Platform.WinPhone
 
 			var platform = Element.Platform as Platform;
 			Size screenSize = platform.Size;
-			Element.MasterBounds = new Rectangle(0, 0, screenSize.Width - 20, screenSize.Height - 20);
-			Element.DetailBounds = new Rectangle(0, 0, width, height);
+			((IMasterDetailPageController)Element).MasterBounds = new Rectangle(0, 0, screenSize.Width - 20, screenSize.Height - 20);
+			((IMasterDetailPageController)Element).DetailBounds = new Rectangle(0, 0, width, height);
 
 			_popup.Width = width - 20;
 			_popup.Height = height - 20;
