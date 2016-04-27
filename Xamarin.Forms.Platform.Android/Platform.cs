@@ -15,6 +15,7 @@ using Android.Views;
 using Android.Widget;
 using Xamarin.Forms.Platform.Android.AppCompat;
 using FragmentManager = Android.Support.V4.App.FragmentManager;
+using Xamarin.Forms.Internals;
 
 namespace Xamarin.Forms.Platform.Android
 {
@@ -348,7 +349,7 @@ namespace Xamarin.Forms.Platform.Android
 				{
 					IMenuItem menuItem = menu.Add(item.Text);
 					menuItem.SetEnabled(item.IsEnabled);
-					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(item.Activate));
+					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(((IMenuItemController)item).Activate));
 				}
 				else
 				{
@@ -361,7 +362,7 @@ namespace Xamarin.Forms.Platform.Android
 					}
 					menuItem.SetEnabled(item.IsEnabled);
 					menuItem.SetShowAsAction(ShowAsAction.Always);
-					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(item.Activate));
+					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(((IMenuItemController)item).Activate));
 				}
 			}
 		}

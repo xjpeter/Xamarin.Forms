@@ -14,7 +14,7 @@ namespace Xamarin.Forms.Platform.Android
 			Enabled = Item.IsEnabled;
 			Text = Item.Text;
 			SetBackgroundColor(new Color(0, 0, 0, 0).ToAndroid());
-			Click += (sender, e) => Item.Activate();
+			Click += (sender, e) => ((IMenuItemController)Item).Activate();
 			Item.PropertyChanged += HandlePropertyChanged;
 		}
 

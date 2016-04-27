@@ -546,7 +546,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 					IsEnabled = item.IsEnabled,
 					Tag = item
 				};
-				button.Click += (sender, args) => item.Activate();
+				button.Click += (sender, args) => ((IMenuItemController)item).Activate();
 				buttonsToAdd.Add(button);
 			}
 
@@ -557,7 +557,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 					continue;
 
 				var button = new TaggedAppBarMenuItem { Text = !string.IsNullOrWhiteSpace(item.Text) ? item.Text : (string)item.Icon ?? "MenuItem", IsEnabled = true, Tag = item };
-				button.Click += (sender, args) => item.Activate();
+				button.Click += (sender, args) => ((IMenuItemController)item).Activate();
 				menuItemsToAdd.Add(button);
 			}
 

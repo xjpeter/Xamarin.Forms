@@ -22,14 +22,14 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		public virtual bool CanExecute(object parameter)
 		{
-			return _menuItem.IsEnabled;
+			return ((IMenuItemController)_menuItem).GetValueIsEnabled();
 		}
 
 		public event EventHandler CanExecuteChanged;
 
 		public void Execute(object parameter)
 		{
-			_menuItem.Activate();
+			((IMenuItemController)_menuItem).Activate();
 		}
 
 		void OnCanExecuteChanged()

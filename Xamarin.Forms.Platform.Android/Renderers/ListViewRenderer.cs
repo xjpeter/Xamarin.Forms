@@ -5,6 +5,7 @@ using Android.Support.V4.Widget;
 using Android.Views;
 using AListView = Android.Widget.ListView;
 using AView = Android.Views.View;
+using Xamarin.Forms.Internals;
 
 namespace Xamarin.Forms.Platform.Android
 {
@@ -64,7 +65,7 @@ namespace Xamarin.Forms.Platform.Android
 					_adapter = null;
 				}
 
-				Element.ScrollToRequested -= OnScrollToRequested;
+				((IListViewController)Element).ScrollToRequested -= OnScrollToRequested;
 			}
 
 			base.Dispose(disposing);
@@ -97,7 +98,7 @@ namespace Xamarin.Forms.Platform.Android
 
 			if (e.OldElement != null)
 			{
-				e.OldElement.ScrollToRequested -= OnScrollToRequested;
+				((IListViewController)e.OldElement).ScrollToRequested -= OnScrollToRequested;
 
 				if (_adapter != null)
 				{
@@ -124,7 +125,7 @@ namespace Xamarin.Forms.Platform.Android
 					nativeListView.AddFooterView(_footerView, null, false);
 				}
 
-				e.NewElement.ScrollToRequested += OnScrollToRequested;
+				((IListViewController)e.NewElement).ScrollToRequested += OnScrollToRequested;
 
 				nativeListView.DividerHeight = 0;
 				nativeListView.Focusable = false;
@@ -181,22 +182,24 @@ namespace Xamarin.Forms.Platform.Android
 
 			Cell cell;
 			int position;
+			var scrollArgs = (ITemplatedItemsListScrollToRequestedEventArgs)e;
 
+			var templatedItems = ((ITemplatedItemsView<Cell>)Element).TemplatedItems;
 			if (Element.IsGroupingEnabled)
 			{
-				var results = Element.TemplatedItems.GetGroupAndIndexOfItem(e.Group, e.Item);
+				var results = templatedItems.GetGroupAndIndexOfItem(scrollArgs.GetValueGroup(), scrollArgs.GetValueItem());
 				if (results.Item1 == -1 || results.Item2 == -1)
 					return;
 
-				TemplatedItemsList<ItemsView<Cell>, Cell> group = Element.TemplatedItems.GetGroup(results.Item1);
+				var group = templatedItems.GetGroup(results.Item1);
 				cell = group[results.Item2];
 
-				position = Element.TemplatedItems.GetGlobalIndexForGroup(group) + results.Item2 + 1;
+				position = templatedItems.GetGlobalIndexForGroup(group) + results.Item2 + 1;
 			}
 			else
 			{
-				position = Element.TemplatedItems.GetGlobalIndexOfItem(e.Item);
-				cell = Element.TemplatedItems[position];
+				position = templatedItems.GetGlobalIndexOfItem(scrollArgs.GetValueItem());
+				cell = templatedItems[position];
 			}
 
 			//Android offsets position of cells when using header

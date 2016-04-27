@@ -11,6 +11,7 @@ using Microsoft.Phone.Controls;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using SLButton = System.Windows.Controls.Button;
 using SLBinding = System.Windows.Data.Binding;
+using System.Collections;
 
 namespace Xamarin.Forms.Platform.WinPhone
 {
@@ -224,7 +225,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 		{
 			base.OnElementChanged(e);
 
-			Element.ScrollToRequested += OnScrollToRequested;
+			((IListViewController)Element).ScrollToRequested += OnScrollToRequested;
 
 			if (Element.SelectedItem != null)
 				_itemNeedsSelecting = true;
@@ -232,7 +233,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 			_listBox = new FixedLongListSelector
 			{
 				DataContext = Element,
-				ItemsSource = Element.TemplatedItems,
+				ItemsSource = (IList)((ITemplatedItemsView<Cell>)Element).TemplatedItems,
 				ItemTemplate = (System.Windows.DataTemplate)System.Windows.Application.Current.Resources["CellTemplate"],
 				GroupHeaderTemplate = (System.Windows.DataTemplate)System.Windows.Application.Current.Resources["ListViewHeader"],
 				ListHeaderTemplate = (System.Windows.DataTemplate)System.Windows.Application.Current.Resources["View"],
@@ -461,18 +462,17 @@ namespace Xamarin.Forms.Platform.WinPhone
 
 			if (Element.IsGroupingEnabled)
 			{
-				TemplatedItemsList<ItemsView<Cell>, Cell> til = TemplatedItemsList<ItemsView<Cell>, Cell>.GetGroup(cell);
-				parentCell = til.HeaderContent;
+				parentCell = cell.GetGroupHeaderContent<ItemsView<Cell>, Cell>();
 			}
 
 			_fromNative = cell.BindingContext;
 
 			if (Element.IsGroupingEnabled)
 			{
-				Element.NotifyRowTapped(TemplatedItemsList<ItemsView<Cell>, Cell>.GetIndex(parentCell), TemplatedItemsList<ItemsView<Cell>, Cell>.GetIndex(cell));
+				((IListViewController)Element).InvokeNotifyRowTapped(parentCell.GetIndex<ItemsView<Cell>, Cell>(), cell.GetIndex<ItemsView<Cell>, Cell>(), null);
 			}
 			else
-				Element.NotifyRowTapped(TemplatedItemsList<ItemsView<Cell>, Cell>.GetIndex(cell));
+				((IListViewController)Element).InvokeNotifyRowTapped(cell.GetIndex<ItemsView<Cell>, Cell>(), null);
 		}
 
 		void OnNativeSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -567,28 +567,30 @@ namespace Xamarin.Forms.Platform.WinPhone
 			double targetHeaderHeight = 0;
 
 			var templateReusables = new Dictionary<System.Windows.DataTemplate, FrameworkElement>();
+			var templatedItems = ((ITemplatedItemsView<Cell>)Element).TemplatedItems;
+			var scrollArgs = (ITemplatedItemsListScrollToRequestedEventArgs)e;
 
 			var found = false;
 
 			if (Element.IsGroupingEnabled)
 			{
-				for (var g = 0; g < Element.TemplatedItems.Count; g++)
+				for (var g = 0; g < templatedItems.Count; g++)
 				{
 					if (found)
 						break;
 
-					TemplatedItemsList<ItemsView<Cell>, Cell> til = Element.TemplatedItems.GetGroup(g);
+					var til = templatedItems.GetGroup(g);
 
 					double headerHeight = GetHeight(templateReusables, Control.GroupHeaderTemplate, til);
 					y += headerHeight;
 
 					for (var i = 0; i < til.Count; i++)
 					{
-						Cell cell = til[i];
+						Cell cell = til[i] as Cell;
 
 						double contentHeight = GetHeight(templateReusables, Control.ItemTemplate, cell);
 
-						if ((ReferenceEquals(til.BindingContext, e.Group) || e.Group == null) && ReferenceEquals(cell.BindingContext, e.Item))
+						if ((ReferenceEquals(til.GetValueBindingContext(), scrollArgs.GetValueGroup()) || scrollArgs.GetValueGroup() == null) && ReferenceEquals(cell.BindingContext, scrollArgs.GetValueItem()))
 						{
 							targetHeaderHeight = headerHeight;
 							targetHeight = contentHeight;
@@ -602,13 +604,13 @@ namespace Xamarin.Forms.Platform.WinPhone
 			}
 			else
 			{
-				for (var i = 0; i < Element.TemplatedItems.Count; i++)
+				for (var i = 0; i < templatedItems.Count; i++)
 				{
-					Cell cell = Element.TemplatedItems[i];
+					Cell cell = templatedItems[i] as Cell;
 
 					double height = GetHeight(templateReusables, Control.ItemTemplate, cell);
 
-					if (ReferenceEquals(cell.BindingContext, e.Item))
+					if (ReferenceEquals(cell.BindingContext, scrollArgs.GetValueItem()))
 					{
 						found = true;
 						targetHeight = height;

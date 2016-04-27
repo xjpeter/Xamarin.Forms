@@ -648,7 +648,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				{
 					IMenuItem menuItem = menu.Add(item.Text);
 					menuItem.SetEnabled(item.IsEnabled);
-					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(item.Activate));
+					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(((IMenuItemController)item).Activate));
 				}
 				else
 				{
@@ -662,7 +662,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 					}
 					menuItem.SetEnabled(item.IsEnabled);
 					menuItem.SetShowAsAction(ShowAsAction.Always);
-					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(item.Activate));
+					menuItem.SetOnMenuItemClickListener(new GenericMenuClickListener(((IMenuItemController)item).Activate));
 				}
 			}
 		}

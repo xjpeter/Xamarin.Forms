@@ -18,7 +18,7 @@ namespace Xamarin.Forms.Platform.Android
 			bitmap = Context.Resources.GetBitmap(Item.Icon);
 			SetImageBitmap(bitmap);
 			SetBackgroundColor(new Color(0, 0, 0, 0).ToAndroid());
-			Click += (sender, e) => item.Activate();
+			Click += (sender, e) => ((IMenuItemController)item).Activate();
 			bitmap.Dispose();
 			Item.PropertyChanged += HandlePropertyChanged;
 		}

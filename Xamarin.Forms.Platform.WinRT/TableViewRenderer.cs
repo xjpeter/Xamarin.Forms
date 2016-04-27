@@ -25,7 +25,7 @@ namespace Xamarin.Forms.Platform.WinRT
 		{
 			if (e.OldElement != null)
 			{
-				e.OldElement.ModelChanged -= OnModelChanged;
+				((ITableViewController)e.OldElement).ModelChanged -= OnModelChanged;
 			}
 
 			if (e.NewElement != null)
@@ -46,7 +46,7 @@ namespace Xamarin.Forms.Platform.WinRT
 					Control.SelectionChanged += OnSelectionChanged;
 				}
 
-				e.NewElement.ModelChanged += OnModelChanged;
+				((ITableViewController)e.NewElement).ModelChanged += OnModelChanged;
 				OnModelChanged(e.NewElement, EventArgs.Empty);
 			}
 
@@ -73,7 +73,7 @@ namespace Xamarin.Forms.Platform.WinRT
 					var cell = item as Cell;
 					if (cell != null)
 					{
-						Element.Model.RowSelected(cell);
+						((ITableViewController)Element).GetValueModel().RowSelected(cell);
 						break;
 					}
 				}

@@ -23,7 +23,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 		{
 			base.OnElementChanged(e);
 
-			Element.ModelChanged += OnModelChanged;
+			((ITableViewController)Element).ModelChanged += OnModelChanged;
 
 			_view = new TableView { DataContext = Element.Root };
 			_view.Tap += OnTapTable;
@@ -71,7 +71,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 			if (!FindIndices(e, out sectionIndex, out cellIndex))
 				return;
 
-			Element.Model.RowLongPressed(sectionIndex, cellIndex);
+			((ITableViewController)Element).GetValueModel().RowLongPressed(sectionIndex, cellIndex);
 		}
 
 		void OnModelChanged(object sender, EventArgs eventArgs)
@@ -85,7 +85,7 @@ namespace Xamarin.Forms.Platform.WinPhone
 			if (!FindIndices(e, out sectionIndex, out cellIndex))
 				return;
 
-			Element.Model.RowSelected(sectionIndex, cellIndex);
+			((ITableViewController)Element).GetValueModel().RowSelected(sectionIndex, cellIndex);
 		}
 	}
 }
