@@ -66,7 +66,7 @@ namespace Xamarin.Forms.Platform.WinRT
 			_renderer.Element.ChildAdded += OnChildAdded;
 			_renderer.Element.ChildRemoved += OnChildRemoved;
 
-			ReadOnlyCollection<Element> children = _renderer.Element.LogicalChildren;
+			ReadOnlyCollection<Element> children = ((IElementController)_renderer.Element).LogicalChildren;
 			for (var i = 0; i < children.Count; i++)
 			{
 				OnChildAdded(_renderer.Element, new ElementEventArgs(children[i]));
@@ -75,12 +75,14 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void EnsureZIndex()
 		{
-			if (_renderer.Element.LogicalChildren.Count == 0)
+			var elementController = ((IElementController)_renderer.Element);
+
+			if (elementController.LogicalChildren.Count == 0)
 				return;
 
-			for (var z = 0; z < _renderer.Element.LogicalChildren.Count; z++)
+			for (var z = 0; z < elementController.LogicalChildren.Count; z++)
 			{
-				var child = _renderer.Element.LogicalChildren[z] as VisualElement;
+				var child = elementController.LogicalChildren[z] as VisualElement;
 				if (child == null)
 					continue;
 

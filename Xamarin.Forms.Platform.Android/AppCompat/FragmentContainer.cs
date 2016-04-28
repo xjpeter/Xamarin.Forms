@@ -40,9 +40,9 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 					return;
 				_isVisible = value;
 				if (_isVisible.Value)
-					Page?.SendAppearing();
+					((IPageController)Page)?.SendAppearing();
 				else
-					Page?.SendDisappearing();
+					((IPageController)Page)?.SendDisappearing();
 			}
 		}
 
@@ -97,20 +97,20 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				return;
 
 			if (hidden)
-				Page.SendDisappearing();
+				((IPageController)Page).SendDisappearing();
 			else
-				Page.SendAppearing();
+				((IPageController)Page).SendAppearing();
 		}
 
 		public override void OnPause()
 		{
-			Page?.SendDisappearing();
+			((IPageController)Page)?.SendDisappearing();
 			base.OnPause();
 		}
 		
 		public override void OnResume()
 		{
-			Page?.SendAppearing();
+			((IPageController)Page)?.SendAppearing();
 			base.OnResume();
 		}
 	}

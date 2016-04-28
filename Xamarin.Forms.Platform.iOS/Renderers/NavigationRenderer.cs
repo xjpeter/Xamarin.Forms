@@ -142,7 +142,7 @@ namespace Xamarin.Forms.Platform.iOS
 			if (!_appeared)
 			{
 				_appeared = true;
-				((NavigationPage)Element)?.SendAppearing();
+				((IPageController)Element)?.SendAppearing();
 			}
 
 			base.ViewDidAppear(animated);
@@ -158,7 +158,7 @@ namespace Xamarin.Forms.Platform.iOS
 				return;
 
 			_appeared = false;
-			((NavigationPage)Element).SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		public override void ViewDidLayoutSubviews()
@@ -175,7 +175,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 			double trueBottom = toolbar.Hidden ? toolbarY : toolbar.Frame.Bottom;
 			var modelSize = _queuedSize.IsZero ? Element.Bounds.Size : _queuedSize;
-			((NavigationPage)Element).ContainerArea = 
+			((IPageController)Element).ContainerArea = 
 				new Rectangle(0, toolbar.Hidden ? 0 : toolbar.Frame.Height, modelSize.Width, modelSize.Height - trueBottom);
 
 			if (!_queuedSize.IsZero)
@@ -270,7 +270,7 @@ namespace Xamarin.Forms.Platform.iOS
 			base.Dispose(disposing);
 			if (_appeared)
 			{
-				((Page)Element).SendDisappearing();
+				((IPageController)Element).SendDisappearing();
 
 				_appeared = false;
 			}
@@ -845,7 +845,7 @@ namespace Xamarin.Forms.Platform.iOS
 			{
 				if (disposing)
 				{
-					Child.SendDisappearing();
+					((IPageController)Child).SendDisappearing();
 					Child = null;
 					_tracker.Target = null;
 					_tracker.CollectionChanged -= TrackerOnCollectionChanged;

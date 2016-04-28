@@ -193,7 +193,7 @@ namespace Xamarin.Forms.Platform.Android
 		{
 			Page modal = _navModel.PopModal();
 
-			modal.SendDisappearing();
+			((IPageController)modal).SendDisappearing();
 			var source = new TaskCompletionSource<Page>();
 
 			IVisualElementRenderer modalRenderer = GetRenderer(modal);
@@ -208,7 +208,7 @@ namespace Xamarin.Forms.Platform.Android
 							modalRenderer.ViewGroup.RemoveFromParent();
 							modalRenderer.Dispose();
 							source.TrySetResult(modal);
-							_navModel.CurrentPage?.SendAppearing();
+							((IPageController)_navModel.CurrentPage)?.SendAppearing();
 						}
 					});
 				}
@@ -217,7 +217,7 @@ namespace Xamarin.Forms.Platform.Android
 					modalRenderer.ViewGroup.RemoveFromParent();
 					modalRenderer.Dispose();
 					source.TrySetResult(modal);
-					_navModel.CurrentPage?.SendAppearing();
+					((IPageController)_navModel.CurrentPage)?.SendAppearing();
 				}
 			}
 
@@ -254,7 +254,7 @@ namespace Xamarin.Forms.Platform.Android
 
 		async Task INavigation.PushModalAsync(Page modal, bool animated)
 		{
-			_navModel.CurrentPage?.SendDisappearing();
+			((IPageController)_navModel.CurrentPage)?.SendDisappearing();
 
 			_navModel.PushModal(modal);
 
@@ -264,7 +264,7 @@ namespace Xamarin.Forms.Platform.Android
 
 			// Verify that the modal is still on the stack
 			if (_navModel.CurrentPage == modal)
-				modal.SendAppearing();
+				((IPageController)modal).SendAppearing();
 
 			_toolbarTracker.Target = _navModel.Roots.Last();
 
@@ -561,7 +561,7 @@ namespace Xamarin.Forms.Platform.Android
 				result.AddRange(AncestorPagesOfPage(((MasterDetailPage)root).Detail));
 			else
 			{
-				foreach (Page page in root.InternalChildren.OfType<Page>())
+				foreach (Page page in ((IPageController)root).InternalChildren.OfType<Page>())
 					result.AddRange(AncestorPagesOfPage(page));
 			}
 

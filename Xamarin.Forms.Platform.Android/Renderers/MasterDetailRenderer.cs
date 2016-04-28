@@ -182,13 +182,13 @@ namespace Xamarin.Forms.Platform.Android
 		protected override void OnAttachedToWindow()
 		{
 			base.OnAttachedToWindow();
-			((Page)Element).SendAppearing();
+			((IPageController)Element).SendAppearing();
 		}
 
 		protected override void OnDetachedFromWindow()
 		{
 			base.OnDetachedFromWindow();
-			((Page)Element).SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		protected virtual void OnElementChanged(VisualElement oldElement, VisualElement newElement)
@@ -254,20 +254,14 @@ namespace Xamarin.Forms.Platform.Android
 
 		void MasterDetailPageAppearing(object sender, EventArgs e)
 		{
-			if (_page.Master != null)
-				_page.Master.SendAppearing();
-
-			if (_page.Detail != null)
-				_page.Detail.SendAppearing();
+			((IPageController)_page.Master)?.SendAppearing();
+			((IPageController)_page.Detail)?.SendAppearing();
 		}
 
 		void MasterDetailPageDisappearing(object sender, EventArgs e)
 		{
-			if (_page.Master != null)
-				_page.Master.SendDisappearing();
-
-			if (_page.Detail != null)
-				_page.Detail.SendDisappearing();
+			((IPageController)_page.Master)?.SendDisappearing();
+			((IPageController)_page.Detail)?.SendDisappearing();
 		}
 
 		void OnBackButtonPressed(object sender, BackButtonPressedEventArgs backButtonPressedEventArgs)

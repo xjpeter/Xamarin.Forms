@@ -78,7 +78,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 			if (oldPage != null)
 			{
-				oldPage.SendDisappearing();
+				((IPageController)oldPage).SendDisappearing();
 				((INotifyCollectionChanged)oldPage.Children).CollectionChanged -= OnChildrenChanged;
 				oldPage.PropertyChanged -= OnElementPropertyChanged;
 			}
@@ -103,7 +103,7 @@ namespace Xamarin.Forms.Platform.WinRT
 				newPage.PropertyChanged += OnElementPropertyChanged;
 
 				UpdateCurrentPage();
-				newPage.SendAppearing();
+				((IPageController)newPage).SendAppearing();
 			}
 
 			OnElementChanged(new ElementChangedEventArgs<CarouselPage>(oldPage, newPage));
@@ -124,7 +124,7 @@ namespace Xamarin.Forms.Platform.WinRT
 			}
 
 			_disposed = true;
-			Element?.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 			SetElement(null);
 		}
 
@@ -150,7 +150,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void OnLoaded(object sender, RoutedEventArgs e)
 		{
-			Element?.SendAppearing();
+			((IPageController)Element)?.SendAppearing();
 		}
 
 		void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -162,14 +162,14 @@ namespace Xamarin.Forms.Platform.WinRT
 			ContentPage currentPage = Element.CurrentPage;
 			if (currentPage == page)
 				return;
-			currentPage?.SendDisappearing();
+			((IPageController)currentPage)?.SendDisappearing();
 			Element.CurrentPage = page;
-			page?.SendAppearing();
+			((IPageController)page)?.SendAppearing();
 		}
 
 		void OnUnloaded(object sender, RoutedEventArgs e)
 		{
-			Element?.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 		}
 
 		void UpdateCurrentPage()

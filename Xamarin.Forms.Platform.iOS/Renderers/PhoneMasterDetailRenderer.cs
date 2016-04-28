@@ -110,13 +110,13 @@ namespace Xamarin.Forms.Platform.iOS
 		public override void ViewDidAppear(bool animated)
 		{
 			base.ViewDidAppear(animated);
-			((Page)Element).SendAppearing();
+			((IPageController)Element).SendAppearing();
 		}
 
 		public override void ViewDidDisappear(bool animated)
 		{
 			base.ViewDidDisappear(animated);
-			((Page)Element).SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		public override void ViewDidLayoutSubviews()
@@ -196,7 +196,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 				EmptyContainers();
 
-				((Page)Element).SendDisappearing();
+				((IPageController)Element).SendDisappearing();
 
 				_disposed = true;
 			}

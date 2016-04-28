@@ -20,20 +20,20 @@ namespace Xamarin.Forms.Platform.UWP
 				if (ActualWidth > 0 && ActualHeight > 0)
 				{
 					var tab = (Page)DataContext;
-					((TabbedPage)tab.RealParent).ContainerArea = new Rectangle(0, 0, ActualWidth, ActualHeight);
+					((IPageController)tab.RealParent).ContainerArea = new Rectangle(0, 0, ActualWidth, ActualHeight);
 				}
 			};
 		}
 
 		void TabbedPagePresenter_Loaded(object sender, RoutedEventArgs e)
 		{
-			var tab = (Page)DataContext;
+			var tab = (IPageController)DataContext;
 			tab.SendAppearing();
 		}
 
 		void TabbedPagePresenter_Unloaded(object sender, RoutedEventArgs e)
 		{
-			var tab = (Page)DataContext;
+			var tab = (IPageController)DataContext;
 			tab.SendDisappearing();
 		}
 	}
@@ -190,7 +190,7 @@ namespace Xamarin.Forms.Platform.UWP
 				return;
 
 			_disposed = true;
-			Element?.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 			SetElement(null);
 			Tracker = null;
 		}
@@ -218,7 +218,7 @@ namespace Xamarin.Forms.Platform.UWP
 			if (Element == null)
 				return;
 
-			Element.SendAppearing();
+			((IPageController)Element).SendAppearing();
 		}
 
 		void OnPagesChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -238,9 +238,9 @@ namespace Xamarin.Forms.Platform.UWP
 			Page currentPage = Element.CurrentPage;
 			if (currentPage == page)
 				return;
-			currentPage?.SendDisappearing();
+			((IPageController)currentPage)?.SendDisappearing();
 			Element.CurrentPage = page;
-			page?.SendAppearing();
+			((IPageController)page)?.SendAppearing();
 		}
 
 		void OnUnloaded(object sender, RoutedEventArgs args)
@@ -248,7 +248,7 @@ namespace Xamarin.Forms.Platform.UWP
 			if (Element == null)
 				return;
 
-			Element.SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		Brush GetBarBackgroundBrush()

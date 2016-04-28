@@ -156,7 +156,7 @@ namespace Xamarin.Forms.Platform.WinRT
 			{
 				oldElement.PushRequested -= OnPushRequested;
 				oldElement.PopRequested -= OnPopRequested;
-				oldElement.InternalChildren.CollectionChanged -= OnChildrenChanged;
+				((IPageController)oldElement).InternalChildren.CollectionChanged -= OnChildrenChanged;
 				oldElement.PropertyChanged -= OnElementPropertyChanged;
 			}
 
@@ -186,7 +186,7 @@ namespace Xamarin.Forms.Platform.WinRT
 				Element.PropertyChanged += OnElementPropertyChanged;
 				Element.PushRequested += OnPushRequested;
 				Element.PopRequested += OnPopRequested;
-				Element.InternalChildren.CollectionChanged += OnChildrenChanged;
+				((IPageController)Element).InternalChildren.CollectionChanged += OnChildrenChanged;
 
 				if (!string.IsNullOrEmpty(Element.AutomationId))
 					_container.SetValue(AutomationProperties.AutomationIdProperty, Element.AutomationId);
@@ -201,7 +201,7 @@ namespace Xamarin.Forms.Platform.WinRT
 		{
 			if (!disposing || _disposed)
 				return;
-			Element?.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 			_disposed = true;
 
 			_container.PointerPressed -= OnPointerPressed;
@@ -341,7 +341,7 @@ namespace Xamarin.Forms.Platform.WinRT
 #if WINDOWS_UWP
 			_navManager = SystemNavigationManager.GetForCurrentView();
 #endif
-			Element.SendAppearing();
+			((IPageController)Element).SendAppearing();
 			UpdateBackButton();
 			UpdateTitleOnParents();
 		}
@@ -372,7 +372,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void OnPopRequested(object sender, NavigationRequestedEventArgs e)
 		{
-			var newCurrent = (Page)Element.InternalChildren[Element.InternalChildren.Count - 2];
+			var newCurrent = (Page)((IPageController)Element).InternalChildren[((IPageController)Element).InternalChildren.Count - 2];
 			SetPage(newCurrent, e.Animated, true);
 		}
 
@@ -383,10 +383,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void OnUnloaded(object sender, RoutedEventArgs args)
 		{
-			if (Element == null)
-				return;
-
-			Element.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 		}
 
 		void PushExistingNavigationStack()
@@ -440,7 +437,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void UpdateBackButton()
 		{
-			bool showBackButton = Element.InternalChildren.Count > 1 && NavigationPage.GetHasBackButton(_currentPage);
+			bool showBackButton = ((IPageController)Element).InternalChildren.Count > 1 && NavigationPage.GetHasBackButton(_currentPage);
 			_container.ShowBackButton = showBackButton;
 
 #if WINDOWS_UWP
@@ -462,7 +459,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void UpdateContainerArea()
 		{
-			Element.ContainerArea = new Rectangle(0, 0, _container.ContentWidth, _container.ContentHeight);
+			((IPageController)Element).ContainerArea = new Rectangle(0, 0, _container.ContentWidth, _container.ContentHeight);
 		}
 
 		void UpdateNavigationBarBackground()

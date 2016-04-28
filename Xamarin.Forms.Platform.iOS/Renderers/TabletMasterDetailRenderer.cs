@@ -75,7 +75,7 @@ namespace Xamarin.Forms.Platform.iOS
 		    {
 		        if (Element != null)
 		        {
-		            ((Page)Element).SendDisappearing();
+		            ((IPageController)Element).SendDisappearing();
 		            Element.PropertyChanged -= HandlePropertyChanged;
 		            Element = null;
 		        }
@@ -153,7 +153,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 		public override void ViewDidAppear(bool animated)
 		{
-			((Page)Element).SendAppearing();
+			((IPageController)Element).SendAppearing();
 			base.ViewDidAppear(animated);
 			ToggleMaster();
 		}
@@ -161,7 +161,7 @@ namespace Xamarin.Forms.Platform.iOS
 		public override void ViewDidDisappear(bool animated)
 		{
 			base.ViewDidDisappear(animated);
-			((Page)Element).SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		public override void ViewDidLayoutSubviews()

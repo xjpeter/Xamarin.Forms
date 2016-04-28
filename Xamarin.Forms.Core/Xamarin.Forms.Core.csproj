@@ -128,6 +128,7 @@
     <Compile Include="InvalidationTrigger.cs" />
     <Compile Include="InvalidNavigationException.cs" />
     <Compile Include="IOpenGlViewController.cs" />
+    <Compile Include="IPageController.cs" />
     <Compile Include="IPanGestureController.cs" />
     <Compile Include="IPinchGestureController.cs" />
     <Compile Include="IProvideParentValues.cs" />

@@ -32,15 +32,17 @@ namespace Xamarin.Forms.Platform.WinPhone
 			_renderer.Element.ChildRemoved += HandleChildRemoved;
 			_renderer.Element.ChildrenReordered += HandleChildrenReordered;
 
-			foreach (Element child in _renderer.Element.LogicalChildren)
+			foreach (Element child in ((IElementController)_renderer.Element).LogicalChildren)
 				HandleChildAdded(_renderer.Element, new ElementEventArgs(child));
 		}
 
 		void EnsureZIndex()
 		{
-			for (var index = 0; index < _renderer.Element.LogicalChildren.Count; index++)
+			var elementController = ((IElementController)_renderer.Element);
+
+			for (var index = 0; index < elementController.LogicalChildren.Count; index++)
 			{
-				var child = (VisualElement)_renderer.Element.LogicalChildren[index];
+				var child = (VisualElement)elementController.LogicalChildren[index];
 				IVisualElementRenderer r = Platform.GetRenderer(child);
 				if (r == null)
 					continue;

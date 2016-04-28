@@ -171,10 +171,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void OnLoaded(object sender, RoutedEventArgs args)
 		{
-			if (Element == null)
-				return;
-
-			Element.SendAppearing();
+			((IPageController)Element)?.SendAppearing();
 		}
 
 		void OnNativeSizeChanged(object sender, SizeChangedEventArgs e)
@@ -184,10 +181,7 @@ namespace Xamarin.Forms.Platform.WinRT
 
 		void OnUnloaded(object sender, RoutedEventArgs args)
 		{
-			if (Element == null)
-				return;
-
-			Element.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 		}
 
 		void OnUserClosedPopover(object sender, EventArgs e)

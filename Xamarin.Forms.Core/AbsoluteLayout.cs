@@ -51,7 +51,7 @@ namespace Xamarin.Forms
 
 		protected override void LayoutChildren(double x, double y, double width, double height)
 		{
-			foreach (View child in LogicalChildren)
+			foreach (View child in LogicalChildrenInternal)
 			{
 				Rectangle rect = ComputeLayoutForRegion(child, new Size(width, height));
 				rect.X += x;
@@ -78,7 +78,7 @@ namespace Xamarin.Forms
 		{
 			var bestFitSize = new Size();
 			var minimum = new Size();
-			foreach (View child in LogicalChildren)
+			foreach (View child in LogicalChildrenInternal)
 			{
 				SizeRequest desiredSize = ComputeBoundingRegionDesiredSize(child);
 

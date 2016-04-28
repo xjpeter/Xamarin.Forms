@@ -194,7 +194,7 @@ namespace Xamarin.Forms.Platform.UWP
 			if (Element == null)
 				return;
 
-			Element.SendAppearing();
+			((IPageController)Element).SendAppearing();
 			UpdateBounds();
 		}
 
@@ -203,7 +203,7 @@ namespace Xamarin.Forms.Platform.UWP
 			if (Element == null)
 				return;
 
-			Element.SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		void OnDetailPropertyChanged(object sender, PropertyChangedEventArgs e)

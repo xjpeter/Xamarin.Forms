@@ -139,9 +139,9 @@ namespace Xamarin.Forms.Platform.WinPhone
 				Control.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
 			}
 
-			for (var i = 0; i < Element.LogicalChildren.Count; i++)
+			for (var i = 0; i < ((IElementController)Element).LogicalChildren.Count; i++)
 			{
-				var child = Element.LogicalChildren[i] as VisualElement;
+				var child = ((IElementController)Element).LogicalChildren[i] as VisualElement;
 				if (child == null)
 					continue;
 				IVisualElementRenderer renderer = Platform.GetRenderer(child);
@@ -164,9 +164,9 @@ namespace Xamarin.Forms.Platform.WinPhone
 
 			Element.IsInNativeLayout = true;
 
-			for (var i = 0; i < Element.LogicalChildren.Count; i++)
+			for (var i = 0; i < ((IElementController)Element).LogicalChildren.Count; i++)
 			{
-				var child = Element.LogicalChildren[i] as VisualElement;
+				var child = ((IElementController)Element).LogicalChildren[i] as VisualElement;
 				if (child == null)
 					continue;
 				IVisualElementRenderer renderer = Platform.GetRenderer(child);

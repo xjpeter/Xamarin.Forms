@@ -205,7 +205,7 @@ namespace Xamarin.Forms.Platform.WinRT
 				return;
 
 			ShowTabs();
-			Page.SendAppearing();
+			((IPageController)Page).SendAppearing();
 		}
 
 		Windows.UI.Xaml.Controls.Page GetTopPage()
@@ -263,7 +263,7 @@ namespace Xamarin.Forms.Platform.WinRT
 		{
 			RemoveTabs();
 			if (Page != null)
-				Page.SendDisappearing();
+				((IPageController)Page).SendDisappearing();
 		}
 	}
 }

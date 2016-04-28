@@ -113,7 +113,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				}
 
 				if (Element != null)
-					Element.InternalChildren.CollectionChanged -= OnChildrenCollectionChanged;
+					((IPageController)Element).InternalChildren.CollectionChanged -= OnChildrenCollectionChanged;
 			}
 
 			base.Dispose(disposing);
@@ -122,13 +122,13 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		protected override void OnAttachedToWindow()
 		{
 			base.OnAttachedToWindow();
-			Element.SendAppearing();
+			((IPageController)Element).SendAppearing();
 		}
 
 		protected override void OnDetachedFromWindow()
 		{
 			base.OnDetachedFromWindow();
-			Element.SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		protected override void OnElementChanged(ElementChangedEventArgs<TabbedPage> e)
@@ -138,7 +138,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			var activity = (FormsAppCompatActivity)Context;
 
 			if (e.OldElement != null)
-				e.OldElement.InternalChildren.CollectionChanged -= OnChildrenCollectionChanged;
+				((IPageController)e.OldElement).InternalChildren.CollectionChanged -= OnChildrenCollectionChanged;
 
 			if (e.NewElement != null)
 			{
@@ -176,7 +176,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 					ScrollToCurrentPage();
 
 				UpdateIgnoreContainerAreas();
-				tabbedPage.InternalChildren.CollectionChanged += OnChildrenCollectionChanged;
+				((IPageController)tabbedPage).InternalChildren.CollectionChanged += OnChildrenCollectionChanged;
 				UpdateBarBackgroundColor();
 				UpdateBarTextColor();
 			}
@@ -215,11 +215,11 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 			if (width > 0 && height > 0)
 			{
-				Element.ContainerArea = new Rectangle(0, context.FromPixels(tabsHeight), context.FromPixels(width), context.FromPixels(height - tabsHeight));
+				((IPageController)Element).ContainerArea = new Rectangle(0, context.FromPixels(tabsHeight), context.FromPixels(width), context.FromPixels(height - tabsHeight));
 
-				for (var i = 0; i < Element.InternalChildren.Count; i++)
+				for (var i = 0; i < ((IPageController)Element).InternalChildren.Count; i++)
 				{
-					var child = Element.InternalChildren[i] as VisualElement;
+					var child = ((IPageController)Element).InternalChildren[i] as VisualElement;
 					if (child == null)
 						continue;
 					IVisualElementRenderer renderer = Android.Platform.GetRenderer(child);
@@ -266,7 +266,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 
 		void UpdateIgnoreContainerAreas()
 		{
-			foreach (Page child in Element.Children)
+			foreach (IPageController child in Element.Children)
 				child.IgnoresContainerArea = child is NavigationPage;
 		}
 
@@ -274,16 +274,16 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 		{
 			TabLayout tabs = _tabLayout;
 
-			if (position >= Element.InternalChildren.Count)
+			if (position >= ((IPageController)Element).InternalChildren.Count)
 				return;
 
-			var leftPage = (Page)Element.InternalChildren[position];
+			var leftPage = (Page)((IPageController)Element).InternalChildren[position];
 			IVisualElementRenderer leftRenderer = Android.Platform.GetRenderer(leftPage);
 
 			if (leftRenderer == null)
 				return;
 
-			if (offset <= 0 || position >= Element.InternalChildren.Count - 1)
+			if (offset <= 0 || position >= ((IPageController)Element).InternalChildren.Count - 1)
 			{
 				var leftNavRenderer = leftRenderer as NavigationPageRenderer;
 				if (leftNavRenderer != null)
@@ -293,7 +293,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			}
 			else
 			{
-				var rightPage = (Page)Element.InternalChildren[position + 1];
+				var rightPage = (TabbedPage)((IPageController)Element).InternalChildren[position + 1];
 				IVisualElementRenderer rightRenderer = Android.Platform.GetRenderer(rightPage);
 
 				var leftHeight = 0;

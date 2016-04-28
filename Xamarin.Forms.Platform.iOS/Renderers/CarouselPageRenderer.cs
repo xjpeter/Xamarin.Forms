@@ -98,7 +98,7 @@ namespace Xamarin.Forms.Platform.iOS
 				return;
 
 			_appeared = true;
-			Carousel.SendAppearing();
+			((IPageController)Carousel).SendAppearing();
 		}
 
 		public override void ViewDidDisappear(bool animated)
@@ -109,7 +109,7 @@ namespace Xamarin.Forms.Platform.iOS
 				return;
 
 			_appeared = false;
-			Carousel.SendDisappearing();
+			((IPageController)Carousel).SendDisappearing();
 		}
 
 		public override void ViewDidLayoutSubviews()
@@ -139,9 +139,9 @@ namespace Xamarin.Forms.Platform.iOS
 
 			View.Add(_scrollView);
 
-			for (var i = 0; i < Element.LogicalChildren.Count; i++)
+			for (var i = 0; i < ((IElementController)Element).LogicalChildren.Count; i++)
 			{
-				Element element = Element.LogicalChildren[i];
+				Element element = ((IElementController)Element).LogicalChildren[i];
 				var child = element as ContentPage;
 				if (child != null)
 					InsertPage(child, i);
@@ -199,7 +199,7 @@ namespace Xamarin.Forms.Platform.iOS
 				if (_appeared)
 				{
 					_appeared = false;
-					Carousel.SendDisappearing();
+					((IPageController)Carousel)?.SendDisappearing();
 				}
 
 				if (_events != null)
@@ -266,10 +266,10 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void OnDecelerationEnded(object sender, EventArgs eventArgs)
 		{
-			if (_ignoreNativeScrolling || SelectedIndex >= Element.LogicalChildren.Count)
+			if (_ignoreNativeScrolling || SelectedIndex >= ((IElementController)Element).LogicalChildren.Count)
 				return;
 
-			Carousel.CurrentPage = (ContentPage)Element.LogicalChildren[SelectedIndex];
+			Carousel.CurrentPage = (ContentPage)((IElementController)Element).LogicalChildren[SelectedIndex];
 		}
 
 		void OnPagesChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -335,9 +335,9 @@ namespace Xamarin.Forms.Platform.iOS
 		{
 			Clear();
 
-			for (var i = 0; i < Element.LogicalChildren.Count; i++)
+			for (var i = 0; i < ((IElementController)Element).LogicalChildren.Count; i++)
 			{
-				Element element = Element.LogicalChildren[i];
+				Element element = ((IElementController)Element).LogicalChildren[i];
 				var child = element as ContentPage;
 				if (child != null)
 					InsertPage(child, i);

@@ -24,13 +24,13 @@ namespace Xamarin.Forms.Platform.WinRT
 
 			if (Element != null)
 			{
-				ReadOnlyCollection<Element> children = Element.LogicalChildren;
+				ReadOnlyCollection<Element> children = ((IElementController)Element).LogicalChildren;
 				for (var i = 0; i < children.Count; i++)
 				{
 					var visualChild = children[i] as VisualElement;
 					visualChild?.Cleanup();
 				}
-				Element?.SendDisappearing();
+				((IPageController)Element)?.SendDisappearing();
 			}
 
 			base.Dispose();
@@ -40,10 +40,7 @@ namespace Xamarin.Forms.Platform.WinRT
 		{
 			base.OnElementChanged(e);
 
-			if (e.OldElement != null)
-			{
-				e.OldElement.SendDisappearing();
-			}
+			((IPageController)e.OldElement)?.SendDisappearing();
 
 			if (e.NewElement != null)
 			{
@@ -56,7 +53,7 @@ namespace Xamarin.Forms.Platform.WinRT
 				}
 
 				if (_loaded)
-					e.NewElement.SendAppearing();
+					((IPageController)e.NewElement).SendAppearing();
 			}
 		}
 
@@ -68,13 +65,13 @@ namespace Xamarin.Forms.Platform.WinRT
 				return;
 			}
 			_loaded = true;
-			Element?.SendAppearing();
+			((IPageController)Element)?.SendAppearing();
 		}
 
 		void OnUnloaded(object sender, RoutedEventArgs args)
 		{
 			_loaded = false;
-			Element?.SendDisappearing();
+			((IPageController)Element)?.SendDisappearing();
 		}
 	}
 }

@@ -33,9 +33,9 @@ namespace Xamarin.Forms.Platform.iOS
 
 		public void Load()
 		{
-			for (var i = 0; i < Renderer.Element.LogicalChildren.Count; i++)
+			for (var i = 0; i < ((IElementController)Renderer.Element).LogicalChildren.Count; i++)
 			{
-				var child = Renderer.Element.LogicalChildren[i] as VisualElement;
+				var child = ((IElementController)Renderer.Element).LogicalChildren[i] as VisualElement;
 				if (child != null)
 					OnChildAdded(child);
 			}
@@ -90,12 +90,14 @@ namespace Xamarin.Forms.Platform.iOS
 
 		void EnsureChildrenOrder()
 		{
-			if (Renderer.Element.LogicalChildren.Count == 0)
+			var elementController = ((IElementController)Renderer.Element);
+
+			if (elementController.LogicalChildren.Count == 0)
 				return;
 
-			for (var z = 0; z < Renderer.Element.LogicalChildren.Count; z++)
+			for (var z = 0; z < elementController.LogicalChildren.Count; z++)
 			{
-				var child = Renderer.Element.LogicalChildren[z] as VisualElement;
+				var child = elementController.LogicalChildren[z] as VisualElement;
 				if (child == null)
 					continue;
 				var childRenderer = Platform.GetRenderer(child);
@@ -152,9 +154,11 @@ namespace Xamarin.Forms.Platform.iOS
 				}
 				else
 				{
-					for (var i = 0; i < oldElement.LogicalChildren.Count; i++)
+					var elementController = ((IElementController)oldElement);
+
+					for (var i = 0; i < elementController.LogicalChildren.Count; i++)
 					{
-						var child = oldElement.LogicalChildren[i] as VisualElement;
+						var child = elementController.LogicalChildren[i] as VisualElement;
 						if (child != null)
 							OnChildRemoved(child);
 					}

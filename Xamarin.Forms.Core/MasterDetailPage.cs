@@ -38,9 +38,9 @@ namespace Xamarin.Forms
 
 				OnPropertyChanging();
 				if (_detail != null)
-					InternalChildren.Remove(_detail);
+					((IPageController)this).InternalChildren.Remove(_detail);
 				_detail = value;
-				InternalChildren.Add(_detail);
+				((IPageController)this).InternalChildren.Add(_detail);
 				OnPropertyChanged();
 			}
 		}
@@ -76,9 +76,9 @@ namespace Xamarin.Forms
 
 				OnPropertyChanging();
 				if (_master != null)
-					InternalChildren.Remove(_master);
+					((IPageController)this).InternalChildren.Remove(_master);
 				_master = value;
-				InternalChildren.Add(_master);
+				((IPageController)this).InternalChildren.Add(_master);
 				OnPropertyChanged();
 			}
 		}

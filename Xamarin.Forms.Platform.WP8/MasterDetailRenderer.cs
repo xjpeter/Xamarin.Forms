@@ -47,11 +47,11 @@ namespace Xamarin.Forms.Platform.WinPhone
 			{
 				if (Element.IsPresented)
 					Toggle();
-				Element.SendAppearing();
+				((IPageController)Element).SendAppearing();
 			};
 			Unloaded += (sender, args) =>
 			{
-				Element.SendDisappearing();
+				((IPageController)Element).SendDisappearing();
 				if (Visible)
 				{
 					var platform = (Platform)Element.Platform;

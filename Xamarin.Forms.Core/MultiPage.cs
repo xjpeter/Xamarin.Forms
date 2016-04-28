@@ -28,8 +28,8 @@ namespace Xamarin.Forms
 			_templatedItems = new TemplatedItemsList<MultiPage<T>, T>(this, ItemsSourceProperty, ItemTemplateProperty);
 			_templatedItems.CollectionChanged += OnTemplatedItemsChanged;
 
-			_children = new ElementCollection<T>(InternalChildren);
-			InternalChildren.CollectionChanged += OnChildrenChanged;
+			_children = new ElementCollection<T>(((IPageController)this).InternalChildren);
+			((IPageController)this).InternalChildren.CollectionChanged += OnChildrenChanged;
 		}
 
 		public IEnumerable ItemsSource
@@ -166,7 +166,7 @@ namespace Xamarin.Forms
 
 		internal T GetPageByIndex(int index)
 		{
-			foreach (T page in InternalChildren)
+			foreach (T page in ((IPageController)this).InternalChildren)
 			{
 				if (index == GetIndex(page))
 					return page;
@@ -199,6 +199,8 @@ namespace Xamarin.Forms
 
 		void OnTemplatedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
+			var pageController = ((IPageController)this);
+
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Add:
@@ -206,7 +208,7 @@ namespace Xamarin.Forms
 						goto case NotifyCollectionChangedAction.Reset;
 
 					for (int i = e.NewStartingIndex; i < Children.Count; i++)
-						SetIndex((T)InternalChildren[i], i + e.NewItems.Count);
+						SetIndex((T)pageController.InternalChildren[i], i + e.NewItems.Count);
 
 					for (var i = 0; i < e.NewItems.Count; i++)
 					{
@@ -214,7 +216,7 @@ namespace Xamarin.Forms
 						page.Owned = true;
 						int index = i + e.NewStartingIndex;
 						SetIndex(page, index);
-						InternalChildren.Insert(index, (T)e.NewItems[i]);
+						pageController.InternalChildren.Insert(index, (T)e.NewItems[i]);
 					}
 
 					break;
@@ -225,12 +227,12 @@ namespace Xamarin.Forms
 
 					int removeIndex = e.OldStartingIndex;
 					for (int i = removeIndex + e.OldItems.Count; i < Children.Count; i++)
-						SetIndex((T)InternalChildren[i], removeIndex++);
+						SetIndex((T)pageController.InternalChildren[i], removeIndex++);
 
 					for (var i = 0; i < e.OldItems.Count; i++)
 					{
-						Element element = InternalChildren[e.OldStartingIndex];
-						InternalChildren.RemoveAt(e.OldStartingIndex);
+						Element element = pageController.InternalChildren[e.OldStartingIndex];
+						pageController.InternalChildren.RemoveAt(e.OldStartingIndex);
 						element.Owned = false;
 					}
 
@@ -249,19 +251,19 @@ namespace Xamarin.Forms
 					{
 						int moveIndex = e.OldStartingIndex;
 						for (int i = moveIndex + e.OldItems.Count; i <= e.NewStartingIndex; i++)
-							SetIndex((T)InternalChildren[i], moveIndex++);
+							SetIndex((T)pageController.InternalChildren[i], moveIndex++);
 					}
 					else
 					{
 						for (var i = 0; i < e.OldStartingIndex - e.NewStartingIndex; i++)
 						{
-							var page = (T)InternalChildren[i + e.NewStartingIndex];
+							var page = (T)pageController.InternalChildren[i + e.NewStartingIndex];
 							SetIndex(page, GetIndex(page) + e.OldItems.Count);
 						}
 					}
 
 					for (var i = 0; i < e.OldItems.Count; i++)
-						InternalChildren.RemoveAt(e.OldStartingIndex);
+						pageController.InternalChildren.RemoveAt(e.OldStartingIndex);
 
 					int insertIndex = e.NewStartingIndex;
 					if (movingForward)
@@ -271,7 +273,7 @@ namespace Xamarin.Forms
 					{
 						var page = (T)e.OldItems[i];
 						SetIndex(page, insertIndex + i);
-						InternalChildren.Insert(insertIndex + i, page);
+						pageController.InternalChildren.Insert(insertIndex + i, page);
 					}
 
 					break;
@@ -282,14 +284,14 @@ namespace Xamarin.Forms
 
 					for (int i = e.OldStartingIndex; i - e.OldStartingIndex < e.OldItems.Count; i++)
 					{
-						Element element = InternalChildren[i];
-						InternalChildren.RemoveAt(i);
+						Element element = pageController.InternalChildren[i];
+						pageController.InternalChildren.RemoveAt(i);
 						element.Owned = false;
 
 						T page = _templatedItems.GetOrCreateContent(i, e.NewItems[i - e.OldStartingIndex]);
 						page.Owned = true;
 						SetIndex(page, i);
-						InternalChildren.Insert(i, page);
+						pageController.InternalChildren.Insert(i, page);
 					}
 
 					break;
@@ -305,9 +307,11 @@ namespace Xamarin.Forms
 
 		void Reset()
 		{
-			List<Element> snapshot = InternalChildren.ToList();
+			var pageController = ((IPageController)this);
 
-			InternalChildren.Clear();
+			List <Element> snapshot = pageController.InternalChildren.ToList();
+
+			pageController.InternalChildren.Clear();
 
 			foreach (Element element in snapshot)
 				element.Owned = false;
@@ -317,7 +321,7 @@ namespace Xamarin.Forms
 				T page = _templatedItems.GetOrCreateContent(i, _templatedItems.ListProxy[i]);
 				page.Owned = true;
 				SetIndex(page, i);
-				InternalChildren.Add(page);
+				pageController.InternalChildren.Add(page);
 			}
 
 			var currentNeedsUpdate = true;
@@ -348,7 +352,7 @@ namespace Xamarin.Forms
 			{
 				int index = _templatedItems.ListProxy.IndexOf(SelectedItem);
 				if (index == -1)
-					CurrentPage = (T)InternalChildren.FirstOrDefault();
+					CurrentPage = (T)((IPageController)this).InternalChildren.FirstOrDefault();
 				else
 					CurrentPage = _templatedItems.GetOrCreateContent(index, SelectedItem);
 			}

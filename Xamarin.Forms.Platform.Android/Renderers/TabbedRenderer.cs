@@ -31,13 +31,13 @@ namespace Xamarin.Forms.Platform.Android
 		protected override void OnAttachedToWindow()
 		{
 			base.OnAttachedToWindow();
-			Element.SendAppearing();
+			((IPageController)Element).SendAppearing();
 		}
 
 		protected override void OnDetachedFromWindow()
 		{
 			base.OnDetachedFromWindow();
-			Element.SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		protected override void OnElementChanged(ElementChangedEventArgs<TabbedPage> e)

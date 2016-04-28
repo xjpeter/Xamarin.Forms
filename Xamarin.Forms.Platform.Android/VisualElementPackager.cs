@@ -96,9 +96,9 @@ namespace Xamarin.Forms.Platform.Android
 
 		void EnsureChildOrder()
 		{
-			for (var i = 0; i < _renderer.Element.LogicalChildren.Count; i++)
+			for (var i = 0; i < ((IElementController)_renderer.Element).LogicalChildren.Count; i++)
 			{
-				Element child = _renderer.Element.LogicalChildren[i];
+				Element child = ((IElementController)_renderer.Element).LogicalChildren[i];
 				var element = (VisualElement)child;
 				if (element != null)
 				{
@@ -113,7 +113,10 @@ namespace Xamarin.Forms.Platform.Android
 			var view = e.Element as VisualElement;
 			if (view != null)
 				AddChild(view);
-			if (_renderer.Element.LogicalChildren[_renderer.Element.LogicalChildren.Count - 1] != view)
+
+			var elementController = (IElementController)_renderer.Element;
+
+			if (elementController.LogicalChildren[elementController.LogicalChildren.Count - 1] != view)
 				EnsureChildOrder();
 		}
 
@@ -155,8 +158,8 @@ namespace Xamarin.Forms.Platform.Android
 				{
 					sameChildrenTypes = true;
 
-					oldChildren = oldElement.LogicalChildren;
-					newChildren = newElement.LogicalChildren;
+					oldChildren = ((IElementController)oldElement).LogicalChildren;
+					newChildren = ((IElementController)newElement).LogicalChildren;
 					if (oldChildren.Count == newChildren.Count)
 					{
 						for (var i = 0; i < oldChildren.Count; i++)
@@ -193,7 +196,7 @@ namespace Xamarin.Forms.Platform.Android
 
 				newElement.ChildrenReordered += _childReorderedHandler;
 
-				newChildren = newChildren ?? newElement.LogicalChildren;
+				newChildren = newChildren ?? ((IElementController)newElement).LogicalChildren;
 
 				for (var i = 0; i < newChildren.Count; i++)
 				{

@@ -78,7 +78,7 @@ namespace Xamarin.Forms.Platform.iOS
 				return;
 
 			_appeared = true;
-			((Page)Element).SendAppearing();
+			((IPageController)Element).SendAppearing();
 		}
 
 		public override void ViewDidDisappear(bool animated)
@@ -89,7 +89,7 @@ namespace Xamarin.Forms.Platform.iOS
 				return;
 
 			_appeared = false;
-			((Page)Element).SendDisappearing();
+			((IPageController)Element).SendDisappearing();
 		}
 
 		public override void ViewDidLoad()
@@ -132,7 +132,7 @@ namespace Xamarin.Forms.Platform.iOS
 				Element.PropertyChanged -= OnHandlePropertyChanged;
 				Platform.SetRenderer(Element, null);
 				if (_appeared)
-					((Page)Element).SendDisappearing();
+					((IPageController)Element).SendDisappearing();
 
 				_appeared = false;
 
