@@ -32,6 +32,8 @@ namespace Xamarin.Forms.Platform.Android
 
 		internal static readonly BindableProperty PageContextProperty = BindableProperty.CreateAttached("PageContext", typeof(Context), typeof(Platform), null);
 
+		IMasterDetailPageController MasterDetailPageController => CurrentMasterDetailPage as IMasterDetailPageController;
+
 		readonly Context _context;
 
 		readonly PlatformRenderer _renderer;
@@ -378,7 +380,7 @@ namespace Xamarin.Forms.Platform.Android
 			}
 			else if (CurrentMasterDetailPage != null)
 			{
-				if (CurrentMasterDetailPage.ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented)
+				if (MasterDetailPageController.ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented)
 					return;
 				CurrentMasterDetailPage.IsPresented = !CurrentMasterDetailPage.IsPresented;
 			}
@@ -480,7 +482,7 @@ namespace Xamarin.Forms.Platform.Android
 				return;
 			}
 			if (!CurrentMasterDetailPage.ShouldShowToolbarButton() || string.IsNullOrEmpty(CurrentMasterDetailPage.Master.Icon) ||
-				(CurrentMasterDetailPage.ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented))
+				(MasterDetailPageController.ShouldShowSplitMode && CurrentMasterDetailPage.IsPresented))
 			{
 				//clear out existing icon;
 				ClearMasterDetailToggle();
@@ -872,7 +874,7 @@ namespace Xamarin.Forms.Platform.Android
 				return false;
 
 			bool hasMasterDetailPage = CurrentMasterDetailPage != null;
-			bool navigated = CurrentNavigationPage != null && CurrentNavigationPage.StackDepth > 1;
+			bool navigated = CurrentNavigationPage != null && ((INavigationPageController)CurrentNavigationPage).StackDepth > 1;
 			bool navigationPageHasNavigationBar = CurrentNavigationPage != null && NavigationPage.GetHasNavigationBar(CurrentNavigationPage.CurrentPage);
 			return navigationPageHasNavigationBar || (hasMasterDetailPage && !navigated);
 		}
@@ -880,7 +882,7 @@ namespace Xamarin.Forms.Platform.Android
 		bool ShouldUpdateActionBarUpColor()
 		{
 			bool hasMasterDetailPage = CurrentMasterDetailPage != null;
-			bool navigated = CurrentNavigationPage != null && CurrentNavigationPage.StackDepth > 1;
+			bool navigated = CurrentNavigationPage != null && ((INavigationPageController)CurrentNavigationPage).StackDepth > 1;
 			return (hasMasterDetailPage && navigated) || !hasMasterDetailPage;
 		}
 
@@ -903,7 +905,7 @@ namespace Xamarin.Forms.Platform.Android
 			if (CurrentNavigationPage == null)
 				return false;
 
-			bool pagePushed = CurrentNavigationPage.StackDepth > 1;
+			bool pagePushed = ((INavigationPageController)CurrentNavigationPage).StackDepth > 1;
 			bool pushedPageHasBackButton = NavigationPage.GetHasBackButton(CurrentNavigationPage.CurrentPage);
 
 			return pagePushed && pushedPageHasBackButton;

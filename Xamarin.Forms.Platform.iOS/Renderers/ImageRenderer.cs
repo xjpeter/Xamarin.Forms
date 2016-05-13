@@ -118,7 +118,8 @@ namespace Xamarin.Forms.Platform.iOS
 			}
 
 			IImageSourceHandler handler;
-			((IElementController)Element).SetValueFromRenderer(Image.IsLoadingPropertyKey, true);
+
+			((IImageController)Element).SetIsLoading(true);
 
 			if (source != null && (handler = Registrar.Registered.GetHandler<IImageSourceHandler>(source.GetType())) != null)
 			{
@@ -143,7 +144,7 @@ namespace Xamarin.Forms.Platform.iOS
 				Control.Image = null;
 
 			if (!_isDisposed)
-				((IElementController)Element).SetValueFromRenderer(Image.IsLoadingPropertyKey, false);
+				((IImageController)Element).SetIsLoading(false);
 		}
 
 		void SetOpacity()
@@ -177,11 +178,11 @@ namespace Xamarin.Forms.Platform.iOS
 	{
 		public async Task<UIImage> LoadImageAsync(ImageSource imagesource, CancellationToken cancelationToken = default(CancellationToken), float scale = 1f)
 		{
-			UIImage image = null;
+			UIImage image = null; 
 			var streamsource = imagesource as StreamImageSource;
 			if (streamsource != null && streamsource.Stream != null)
 			{
-				using (var streamImage = await streamsource.GetStreamAsync(cancelationToken).ConfigureAwait(false))
+				using (var streamImage = await ((IStreamImageSource)streamsource).GetStreamAsync(cancelationToken).ConfigureAwait(false))
 				{
 					if (streamImage != null)
 						image = UIImage.LoadFromData(NSData.FromStream(streamImage), scale);
